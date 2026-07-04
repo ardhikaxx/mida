@@ -9,6 +9,10 @@ class AboutScreen extends StatelessWidget {
     final color = theme.colorScheme.primary;
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: const Text('Tentang MIDA'),
         centerTitle: true,
       ),

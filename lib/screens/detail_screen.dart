@@ -10,7 +10,13 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(code.classification)),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(code.classification),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
