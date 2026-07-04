@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/icd_code.dart';
 import '../services/icd_service.dart';
+import 'coding_guidelines_screen.dart';
 
 class DetailScreen extends StatefulWidget {
   final IcdCode code;
@@ -81,6 +82,8 @@ class _DetailScreenState extends State<DetailScreen> {
             ],
           ],
           _infoSection(theme, color),
+          const SizedBox(height: 12),
+          _guidelinesButton(theme, color),
         ],
       ),
     );
@@ -453,6 +456,58 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _guidelinesButton(ThemeData theme, Color color) {
+    return GestureDetector(
+      onTap: () {
+        final type = IcdClassification.fromLabel(widget.code.classification);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => CodingGuidelinesScreen(initialType: type),
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.assignment_outlined, color: color, size: 22),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Panduan Pengkodean',
+                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    widget.code.classification,
+                    style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: theme.colorScheme.onSurfaceVariant, size: 20),
+          ],
+        ),
       ),
     );
   }

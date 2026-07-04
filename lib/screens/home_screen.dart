@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/icd_service.dart';
 import 'about_screen.dart';
+import 'code_validator_screen.dart';
+import 'coding_guidelines_screen.dart';
 import 'diagnosis_screen.dart';
 import 'generator_screen.dart';
 import 'icd_tree_screen.dart';
@@ -137,6 +139,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       case 'generator':
                         screen = const GeneratorScreen();
                         break;
+                      case 'validator':
+                        screen = const CodeValidatorScreen();
+                        break;
+                      case 'guidelines':
+                        screen = const CodingGuidelinesScreen();
+                        break;
                       case 'about':
                         screen = const AboutScreen();
                         break;
@@ -190,6 +198,30 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
+                    PopupMenuDivider(height: 4),
+                    const PopupMenuItem(
+                      value: 'validator',
+                      height: 48,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 32, child: Icon(Icons.verified_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 12),
+                          Text('Cek Validasi Kode', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'guidelines',
+                      height: 48,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 32, child: Icon(Icons.assignment_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 12),
+                          Text('Panduan Pengkodean', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                    ),
+                    PopupMenuDivider(height: 4),
                     PopupMenuItem(
                       value: 'about',
                       height: 48,
