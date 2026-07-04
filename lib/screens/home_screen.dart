@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 52),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 56),
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
