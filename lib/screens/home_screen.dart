@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
               20,
               MediaQuery.of(context).padding.top + 14,
               20,
-              8,
+              14,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
