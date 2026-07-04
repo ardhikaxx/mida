@@ -111,24 +111,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const IcdTreeScreen())),
-                  child: Icon(Icons.account_tree_outlined, size: 20, color: theme.colorScheme.onSurfaceVariant),
-                ),
-                const SizedBox(width: 12),
-                GestureDetector(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MedicalDictScreen())),
-                  child: Icon(Icons.menu_book_outlined, size: 20, color: theme.colorScheme.onSurfaceVariant),
-                ),
-                const SizedBox(width: 12),
-                GestureDetector(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const GeneratorScreen())),
-                  child: Icon(Icons.auto_fix_high_outlined, size: 20, color: theme.colorScheme.primary),
-                ),
-                const SizedBox(width: 12),
-                GestureDetector(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())),
-                  child: Icon(Icons.info_outline, size: 20, color: theme.colorScheme.onSurfaceVariant),
+                PopupMenuButton<String>(
+                  icon: Icon(Icons.more_vert, size: 20, color: theme.colorScheme.onSurfaceVariant),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  onSelected: (v) {
+                    Widget screen;
+                    switch (v) {
+                      case 'tree':
+                        screen = const IcdTreeScreen();
+                        break;
+                      case 'dict':
+                        screen = const MedicalDictScreen();
+                        break;
+                      case 'generator':
+                        screen = const GeneratorScreen();
+                        break;
+                      case 'about':
+                        screen = const AboutScreen();
+                        break;
+                      default:
+                        return;
+                    }
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+                  },
+                  itemBuilder: (_) => [
+                    const PopupMenuItem(value: 'tree', child: ListTile(leading: Icon(Icons.account_tree_outlined), title: Text('Pohon ICD'), dense: true, contentPadding: EdgeInsets.zero)),
+                    const PopupMenuItem(value: 'dict', child: ListTile(leading: Icon(Icons.menu_book_outlined), title: Text('Glosarium'), dense: true, contentPadding: EdgeInsets.zero)),
+                    const PopupMenuItem(value: 'generator', child: ListTile(leading: Icon(Icons.auto_fix_high_outlined), title: Text('Cari Gejala'), dense: true, contentPadding: EdgeInsets.zero)),
+                    const PopupMenuItem(value: 'about', child: ListTile(leading: Icon(Icons.info_outline), title: Text('Tentang'), dense: true, contentPadding: EdgeInsets.zero)),
+                  ],
                 ),
               ],
             ),
