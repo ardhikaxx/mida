@@ -259,7 +259,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'ardhikaxx',
+                  'Yanuar Ardhika Rahmadhani Ubaidillah',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: color,
@@ -268,7 +268,6 @@ class AboutScreen extends StatelessWidget {
               ],
             ),
           ),
-          Icon(Icons.open_in_new, size: 18, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5)),
         ],
       ),
     );
