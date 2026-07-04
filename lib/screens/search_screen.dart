@@ -50,8 +50,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool get _isSearching => _query.trim().isNotEmpty;
   List<IcdCode> get _displayList =>
       _showAll || _isSearching ? _filtered : _filtered.take(_initialLimit).toList();
-  int get _hiddenCount =>
-      _filtered.length - _initialLimit;
+  int get _hiddenCount => _filtered.length - _initialLimit;
 
   @override
   void dispose() {
@@ -95,60 +94,32 @@ class _SearchScreenState extends State<SearchScreen> {
           child: _loading
               ? const Center(child: CircularProgressIndicator())
               : ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
                   itemCount: _displayList.length + (_showMoreVisible ? 1 : 0),
                   itemBuilder: (_, i) {
                     if (_showMoreVisible && i == _displayList.length) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Center(
-                          child: TextButton.icon(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton.icon(
                             onPressed: () => setState(() => _showAll = true),
                             icon: const Icon(Icons.expand_more),
                             label: Text('Lihat semua ($_hiddenCount lainnya)'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: widget.color,
+                              side: BorderSide(color: widget.color.withValues(alpha: 0.3)),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
                           ),
                         ),
                       );
                     }
                     final item = _displayList[i];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      child: ListTile(
-                        leading: Container(
-                          width: 72,
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          decoration: BoxDecoration(
-                            color: widget.color.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            item.code,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: widget.color,
-                              fontSize: 12,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ),
-                        title: Text(item.description,
-                            style: const TextStyle(fontSize: 14)),
-                        subtitle: item.chapter != null
-                            ? Text('Chapter ${item.chapter}',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: theme.colorScheme.outline))
-                            : null,
-                        trailing: const Icon(Icons.chevron_right, size: 18),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => DetailScreen(code: item),
-                          ),
-                        ),
-                      ),
-                    );
+                    return _IcdCard(item: item, color: widget.color, theme: theme);
                   },
                 ),
         ),
@@ -156,6 +127,102 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  bool get _showMoreVisible =>
-      !_isSearching && !_showAll && _hiddenCount > 0;
+  bool get _showMoreVisible => !_isSearching && !_showAll && _hiddenCount > 0;
+}
+
+class _IcdCard extends StatelessWidget {
+  final IcdCode item;
+  final Color color;
+  final ThemeData theme;
+
+  const _IcdCard({
+    required this.item,
+    required this.color,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4)),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => DetailScreen(code: item)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          child: Row(
+            children: [
+              Container(
+                width: 80,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  item.code,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    color: color,
+                    fontSize: 13,
+                    letterSpacing: 1.2,
+                    height: 1.2,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.description,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        height: 1.3,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (item.chapter != null) ...[
+                      const SizedBox(height: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          item.chapter == 'Morphology' || item.chapter == 'Topography'
+                              ? item.chapter!
+                              : 'Chapter ${item.chapter}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: theme.colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(width: 4),
+              Icon(Icons.chevron_right, size: 20, color: theme.colorScheme.outline),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
