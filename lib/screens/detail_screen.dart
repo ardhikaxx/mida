@@ -30,10 +30,13 @@ class _DetailScreenState extends State<DetailScreen> {
   IcdCode? get _parentCategory {
     final prefix = _prefix;
     return _allCodes.cast<IcdCode?>().firstWhere(
-      (c) => c!.code == prefix,
+      (c) => c!.code == prefix && c.code != widget.code.code,
       orElse: () => null,
     );
   }
+
+  bool get _isCodeParentNotNeeded =>
+    !widget.code.code.contains('.');
 
   @override
   void initState() {
@@ -178,6 +181,33 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   Widget _hierarchySection(ThemeData theme, Color color) {
+    final items = <Widget>[];
+    if (widget.code.chapter != null) {
+      items.add(_hierarchyItem(
+        theme, color,
+        widget.code.chapter == 'Morphology' || widget.code.chapter == 'Topography'
+            ? widget.code.chapter!
+            : 'Chapter ${widget.code.chapter}',
+        widget.code.chapterTitle ?? '',
+        Icons.folder_outlined, Colors.orange,
+      ));
+      items.add(_hierarchyConnector(theme));
+    }
+    if (!_isCodeParentNotNeeded) {
+      items.add(_hierarchyItem(
+        theme, color,
+        _parentCategory?.code ?? _prefix,
+        _parentCategory?.description ?? 'Kategori',
+        Icons.label_outline, Colors.blue,
+      ));
+      items.add(_hierarchyConnector(theme));
+    }
+    items.add(_hierarchyItem(
+      theme, color,
+      widget.code.code, widget.code.description,
+      Icons.code, color,
+    ));
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -200,11 +230,7 @@ class _DetailScreenState extends State<DetailScreen> {
             ],
           ),
           const SizedBox(height: 12),
-          _hierarchyItem(theme, color, 'Chapter ${widget.code.chapter}', widget.code.chapterTitle ?? '', Icons.folder_outlined, Colors.orange),
-          _hierarchyConnector(theme),
-          _hierarchyItem(theme, color, _parentCategory?.code ?? _prefix, _parentCategory?.description ?? 'Kategori', Icons.label_outline, Colors.blue),
-          _hierarchyConnector(theme),
-          _hierarchyItem(theme, color, widget.code.code, widget.code.description, Icons.code, color),
+          ...items,
         ],
       ),
     );
