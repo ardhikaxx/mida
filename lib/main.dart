@@ -15,7 +15,7 @@ class MidaApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0077B6),
+          seedColor: const Color(0xFF00796B),
           brightness: Brightness.light,
         ),
         useMaterial3: true,

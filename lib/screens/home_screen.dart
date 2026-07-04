@@ -20,12 +20,14 @@ class _HomeScreenState extends State<HomeScreen> {
     IcdClassification.icd9CM,
   ];
 
+  static const _appColor = Color(0xFF00796B);
+
   static const _colors = [
-    Color(0xFF0077B6),
-    Color(0xFFD63384),
-    Color(0xFF6F42C1),
-    Color(0xFFE85D04),
-    Color(0xFF2D6A4F),
+    _appColor,
+    _appColor,
+    _appColor,
+    _appColor,
+    _appColor,
   ];
 
   static const _icons = [
