@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'screens/onboarding_screen.dart';
 
 void main() {
   runApp(const MidaApp());
@@ -21,7 +21,7 @@ class MidaApp extends StatelessWidget {
         useMaterial3: true,
         appBarTheme: const AppBarTheme(centerTitle: true),
       ),
-      home: const HomeScreen(),
+      home: const OnboardingScreen(),
     );
   }
 }
