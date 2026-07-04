@@ -168,7 +168,7 @@ class AboutScreen extends StatelessWidget {
     final sources = [
       ('ICD-10', 'World Health Organization', Icons.health_and_safety),
       ('ICD-MM', 'WHO — Maternal Mortality', Icons.pregnant_woman),
-      ('ICD-PM', 'WHO — Perinatal Mortality', Icons.child_care),
+      ('ICD-PM', 'WHO — Perinatal Mortality', Icons.monitor_heart),
       ('ICD-O', 'WHO — Oncology, 3rd Ed.', Icons.biotech),
       ('ICD-9-CM', 'WHO — Clinical Modification', Icons.healing),
     ];

@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const _icons = [
     Icons.medical_services_outlined,
     Icons.pregnant_woman_outlined,
-    Icons.child_care_outlined,
+    Icons.monitor_heart_outlined,
     Icons.health_and_safety_outlined,
     Icons.healing_outlined,
   ];
@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const _iconsFilled = [
     Icons.medical_services,
     Icons.pregnant_woman,
-    Icons.child_care,
+    Icons.monitor_heart,
     Icons.health_and_safety,
     Icons.healing,
   ];
