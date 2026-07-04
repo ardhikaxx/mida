@@ -36,6 +36,14 @@ class _HomeScreenState extends State<HomeScreen> {
     Icons.healing_outlined,
   ];
 
+  static const _iconsFilled = [
+    Icons.medical_services,
+    Icons.pregnant_woman,
+    Icons.child_care,
+    Icons.health_and_safety,
+    Icons.healing,
+  ];
+
   static const _labels = [
     'ICD-10',
     'ICD-MM',
@@ -88,37 +96,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
                     color: isSelected
-                        ? _colors[i].withValues(alpha: 0.12)
+                        ? _colors[i].withValues(alpha: 0.15)
                         : Colors.transparent,
                   ),
                   child: Center(
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      transitionBuilder: (child, anim) =>
-                          FadeTransition(opacity: anim, child: child),
-                      child: isSelected
-                          ? Padding(
-                              key: const ValueKey('text'),
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
-                              child: Text(
-                                _labels[i],
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                  color: _colors[i],
-                                  letterSpacing: 0.3,
-                                ),
-                              ),
-                            )
-                          : Padding(
-                              key: const ValueKey('icon'),
-                              padding: const EdgeInsets.all(8),
-                              child: Icon(
-                                _icons[i],
-                                color: theme.colorScheme.onSurfaceVariant,
-                                size: 20,
-                              ),
-                            ),
+                    child: Icon(
+                      isSelected ? _iconsFilled[i] : _icons[i],
+                      color: isSelected
+                          ? _colors[i]
+                          : theme.colorScheme.onSurfaceVariant,
+                      size: 22,
                     ),
                   ),
                 ),
