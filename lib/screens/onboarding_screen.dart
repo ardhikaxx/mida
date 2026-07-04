@@ -168,19 +168,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ],
             ),
             Positioned(
-              top: 0,
+              top: 12,
               left: 24,
-              child: Text(
-                'MIDA',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  color: theme.colorScheme.primary,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.5,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'MIDA',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                  Text(
+                    'Mobile ICD Database Application',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                    ),
+                  ),
+                ],
               ),
             ),
             Positioned(
-              top: 0,
+              top: 12,
               right: 8,
               child: TextButton(
                 onPressed: () => _goToHome(context),
