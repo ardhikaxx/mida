@@ -62,6 +62,17 @@ class AboutScreen extends StatelessWidget {
             height: 72,
             child: Image.asset('assets/images/logo-kemkes-new.png', fit: BoxFit.contain),
           ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 24, child: Image.asset('assets/images/logo-kemenkes.png', fit: BoxFit.contain)),
+              const SizedBox(width: 16),
+              SizedBox(height: 24, child: Image.asset('assets/images/bangga-melayani-bangsa-seeklogo.png', fit: BoxFit.contain)),
+              const SizedBox(width: 16),
+              SizedBox(height: 24, child: Image.asset('assets/images/logo-berakhlak.png', fit: BoxFit.contain)),
+            ],
+          ),
           const SizedBox(height: 16),
           Text(
             'MIDA',
