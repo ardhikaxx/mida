@@ -75,44 +75,43 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  RichText(
-                    text: TextSpan(
-                      style: theme.textTheme.labelSmall,
-                      children: [
-                        TextSpan(
-                          text: 'MIDA',
-                          style: TextStyle(
-                            color: theme.colorScheme.primary,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'MIDA',
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: theme.colorScheme.primary,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 1.5,
+                            ),
+                          ),
+                          Text(
+                            'mobile icd database application',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                              letterSpacing: 0.3,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text(
+                          _labels[_selectedIndex],
+                          style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w800,
-                            letterSpacing: 1.5,
+                            color: _colors[_selectedIndex],
                           ),
                         ),
-                        TextSpan(
-                          text: '  ·  ',
-                          style: TextStyle(
-                            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
-                          ),
-                        ),
-                        TextSpan(
-                          text: 'mobile icd database application',
-                          style: TextStyle(
-                            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                            letterSpacing: 0.3,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _labels[_selectedIndex],
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      height: 1.1,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 8),
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOutCubic,
