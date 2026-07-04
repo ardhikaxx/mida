@@ -29,19 +29,11 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Icon(
-                Icons.medical_services,
-                size: 56,
-                color: theme.colorScheme.onPrimaryContainer,
-              ),
+            SizedBox(
+              height: 80,
+              child: Image.asset('assets/images/logo-kemkes-new.png', fit: BoxFit.contain),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 24),
             Text(
               'MIDA',
               style: theme.textTheme.displaySmall?.copyWith(
@@ -56,6 +48,17 @@ class _SplashScreenState extends State<SplashScreen> {
               style: theme.textTheme.titleSmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
+            ),
+            const SizedBox(height: 32),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 28, child: Image.asset('assets/images/logo-kemenkes.png', fit: BoxFit.contain)),
+                const SizedBox(width: 20),
+                SizedBox(height: 28, child: Image.asset('assets/images/bangga-melayani-bangsa-seeklogo.png', fit: BoxFit.contain)),
+                const SizedBox(width: 20),
+                SizedBox(height: 28, child: Image.asset('assets/images/logo-berakhlak.png', fit: BoxFit.contain)),
+              ],
             ),
           ],
         ),
