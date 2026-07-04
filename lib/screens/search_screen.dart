@@ -25,6 +25,7 @@ class _SearchScreenState extends State<SearchScreen> {
   String _query = '';
   Timer? _debounce;
   String? _selectedChapter;
+  String? _selectedBodyPart;
   List<String> _chapters = [];
   static const int _initialLimit = 100;
 
@@ -62,6 +63,22 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() => _query = code.code);
   }
 
+  static const _bodyParts = <String, List<String>>{
+    'Tengkorak & Saraf': ['6', 'G'],
+    'Mata': ['7', 'H'],
+    'Telinga': ['8'],
+    'Mulut & Tenggorokan': ['10', '11', 'J', 'K'],
+    'Jantung & Pembuluh': ['9', 'I'],
+    'Paru & Pernapasan': ['10', 'J'],
+    'Perut & Pencernaan': ['11', 'K'],
+    'Kulit': ['12', 'L'],
+    'Tulang & Otot': ['13', 'M'],
+    'Ginjal & Kelamin': ['14', 'N'],
+    'Darah': ['3', 'D'],
+    'Hormon & Metabolik': ['4', 'E'],
+    'Mental & Perilaku': ['5', 'F'],
+  };
+
   List<IcdCode> get _filtered {
     var result = _allCodes;
     final q = _query.trim().toLowerCase();
@@ -75,6 +92,10 @@ class _SearchScreenState extends State<SearchScreen> {
     }
     if (_selectedChapter != null) {
       result = result.where((c) => c.chapter == _selectedChapter).toList();
+    }
+    if (_selectedBodyPart != null) {
+      final chapters = _bodyParts[_selectedBodyPart]!;
+      result = result.where((c) => c.chapter != null && chapters.contains(c.chapter)).toList();
     }
     return result;
   }
@@ -209,13 +230,35 @@ class _SearchScreenState extends State<SearchScreen> {
               }),
             ),
           ),
-        if (!_loading && _chapters.length > 1)
+        if (!_loading && (_chapters.length > 1 || _bodyParts.isNotEmpty))
           SizedBox(
             height: 40,
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               children: [
+                FilterChip(
+                  avatar: Icon(Icons.favorite_border, size: 14, color: _selectedBodyPart != null ? Colors.white : widget.color.withValues(alpha: 0.7)),
+                  label: Text(
+                    _selectedBodyPart ?? 'Tubuh',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: _selectedBodyPart != null ? Colors.white : widget.color.withValues(alpha: 0.7),
+                    ),
+                  ),
+                  selected: _selectedBodyPart != null,
+                  onSelected: (_) {
+                    if (_selectedBodyPart != null) {
+                      setState(() => _selectedBodyPart = null);
+                    } else {
+                      _showBodyPartPicker();
+                    }
+                  },
+                  visualDensity: VisualDensity.compact,
+                  selectedColor: widget.color,
+                  showCheckmark: false,
+                ),
+                const SizedBox(width: 6),
                 FilterChip(
                   label: Text(
                     'Semua',
@@ -289,6 +332,50 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   bool get _showMoreVisible => !_isSearching && !_showAll && _hiddenCount > 0;
+
+  void _showBodyPartPicker() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 36, height: 4,
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.outlineVariant, borderRadius: BorderRadius.circular(2)),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text('Filter Bagian Tubuh', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+            const SizedBox(height: 4),
+            Text('Pilih bagian tubuh untuk mempersempit hasil', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _bodyParts.keys.map((part) {
+                final selected = _selectedBodyPart == part;
+                return ChoiceChip(
+                  label: Text(part, style: TextStyle(fontSize: 13, color: selected ? Colors.white : null)),
+                  selected: selected,
+                  onSelected: (_) {
+                    setState(() => _selectedBodyPart = selected ? null : part);
+                    Navigator.pop(ctx);
+                  },
+                  selectedColor: widget.color,
+                  visualDensity: VisualDensity.compact,
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildLogo(String path, {double height = 32}) {
     return SizedBox(

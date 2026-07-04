@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/icd_service.dart';
 import 'about_screen.dart';
+import 'generator_screen.dart';
 import 'search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -111,6 +112,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 GestureDetector(
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())),
                   child: Icon(Icons.info_outline, size: 20, color: theme.colorScheme.onSurfaceVariant),
+                ),
+                const SizedBox(width: 16),
+                GestureDetector(
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const GeneratorScreen())),
+                  child: Icon(Icons.auto_fix_high_outlined, size: 20, color: theme.colorScheme.primary),
                 ),
               ],
             ),
