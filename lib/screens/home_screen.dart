@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(72),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 56),
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
@@ -70,48 +70,50 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          child: SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'MIDA',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 1.5,
-                            ),
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+              20,
+              MediaQuery.of(context).padding.top + 8,
+              20,
+              8,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'MIDA',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 1.5,
                           ),
-                          Text(
-                            'mobile icd database application',
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                              letterSpacing: 0.3,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Text(
-                        _labels[_selectedIndex],
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: _colors[_selectedIndex],
                         ),
+                        Text(
+                          'mobile icd database application',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    Text(
+                      _labels[_selectedIndex],
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: _colors[_selectedIndex],
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
