@@ -143,28 +143,10 @@ class AboutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Center(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: theme.colorScheme.outlineVariant),
-                boxShadow: [
-                  BoxShadow(
-                    color: color.withValues(alpha: 0.08),
-                    blurRadius: 20,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(16),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: SizedBox(
-                  width: 180,
-                  height: 180,
-                  child: Image.asset('assets/images/qris.png', fit: BoxFit.contain),
-                ),
-              ),
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: Image.asset('assets/images/qris.png', fit: BoxFit.contain),
             ),
           ),
         ],
