@@ -144,8 +144,8 @@ class AboutScreen extends StatelessWidget {
           const SizedBox(height: 16),
           Center(
             child: SizedBox(
-              width: 200,
-              height: 200,
+              width: 260,
+              height: 260,
               child: Image.asset('assets/images/qris.png', fit: BoxFit.contain),
             ),
           ),
