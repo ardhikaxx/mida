@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../models/icd_code.dart';
 import '../services/icd_service.dart';
 import 'detail_screen.dart';
@@ -22,6 +23,8 @@ class _SearchScreenState extends State<SearchScreen> {
   bool _showAll = false;
   String _query = '';
   Timer? _debounce;
+  String? _selectedChapter;
+  List<String> _chapters = [];
   static const int _initialLimit = 100;
 
   @override
@@ -32,21 +35,29 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Future<void> _loadAll() async {
     final codes = await _service.load(widget.type);
+    final chapters = codes.map((c) => c.chapter).whereType<String>().toSet().toList()..sort();
     setState(() {
       _allCodes = codes;
+      _chapters = chapters;
       _loading = false;
     });
   }
 
   List<IcdCode> get _filtered {
+    var result = _allCodes;
     final q = _query.trim().toLowerCase();
-    if (q.isEmpty) return _allCodes;
-    return _allCodes.where((c) {
-      return c.code.toLowerCase().contains(q) ||
-          c.description.toLowerCase().contains(q) ||
-          (c.chapter?.toLowerCase().contains(q) ?? false) ||
-          (c.chapterTitle?.toLowerCase().contains(q) ?? false);
-    }).toList();
+    if (q.isNotEmpty) {
+      result = result.where((c) {
+        return c.code.toLowerCase().contains(q) ||
+            c.description.toLowerCase().contains(q) ||
+            (c.chapter?.toLowerCase().contains(q) ?? false) ||
+            (c.chapterTitle?.toLowerCase().contains(q) ?? false);
+      }).toList();
+    }
+    if (_selectedChapter != null) {
+      result = result.where((c) => c.chapter == _selectedChapter).toList();
+    }
+    return result;
   }
 
   bool get _isSearching => _query.trim().isNotEmpty;
@@ -112,6 +123,48 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
           ),
         ),
+        if (!_loading && _chapters.length > 1)
+          SizedBox(
+            height: 40,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              children: [
+                FilterChip(
+                  label: Text(
+                    'Semua',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: _selectedChapter == null ? Colors.white : null,
+                    ),
+                  ),
+                  selected: _selectedChapter == null,
+                  onSelected: (_) => setState(() => _selectedChapter = null),
+                  visualDensity: VisualDensity.compact,
+                  selectedColor: widget.color,
+                  checkmarkColor: Colors.white,
+                ),
+                const SizedBox(width: 6),
+                ..._chapters.map((ch) => Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: FilterChip(
+                    label: Text(
+                      ch == 'Morphology' || ch == 'Topography' ? ch : 'Ch. $ch',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: _selectedChapter == ch ? Colors.white : null,
+                      ),
+                    ),
+                    selected: _selectedChapter == ch,
+                    onSelected: (sel) => setState(() => _selectedChapter = sel ? ch : null),
+                    visualDensity: VisualDensity.compact,
+                    selectedColor: widget.color,
+                    checkmarkColor: Colors.white,
+                  ),
+                )),
+              ],
+            ),
+          ),
         Expanded(
           child: _loading
               ? const Center(child: CircularProgressIndicator())
@@ -170,6 +223,17 @@ class _IcdCard extends StatelessWidget {
     required this.theme,
   });
 
+  void _copyCode(BuildContext context) {
+    Clipboard.setData(ClipboardData(text: item.code));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${item.code} disalin'),
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -196,22 +260,25 @@ class _IcdCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    constraints: const BoxConstraints(minWidth: 68),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      item.code,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        color: color,
-                        fontSize: 12,
-                        letterSpacing: 1,
-                        height: 1.3,
+                  GestureDetector(
+                    onTap: () => _copyCode(context),
+                    child: Container(
+                      constraints: const BoxConstraints(minWidth: 68),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        item.code,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          color: color,
+                          fontSize: 12,
+                          letterSpacing: 1,
+                          height: 1.3,
+                        ),
                       ),
                     ),
                   ),
