@@ -113,7 +113,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 8),
                 PopupMenuButton<String>(
                   icon: Icon(Icons.more_vert, size: 20, color: theme.colorScheme.onSurfaceVariant),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  color: Colors.white,
+                  elevation: 8,
+                  shadowColor: theme.shadowColor.withValues(alpha: 0.15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3)),
+                  ),
+                  position: PopupMenuPosition.under,
                   onSelected: (v) {
                     Widget screen;
                     switch (v) {
@@ -135,10 +142,50 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
                   },
                   itemBuilder: (_) => [
-                    const PopupMenuItem(value: 'tree', child: ListTile(leading: Icon(Icons.account_tree_outlined), title: Text('Pohon ICD'), dense: true, contentPadding: EdgeInsets.zero)),
-                    const PopupMenuItem(value: 'dict', child: ListTile(leading: Icon(Icons.menu_book_outlined), title: Text('Glosarium'), dense: true, contentPadding: EdgeInsets.zero)),
-                    const PopupMenuItem(value: 'generator', child: ListTile(leading: Icon(Icons.auto_fix_high_outlined), title: Text('Cari Gejala'), dense: true, contentPadding: EdgeInsets.zero)),
-                    const PopupMenuItem(value: 'about', child: ListTile(leading: Icon(Icons.info_outline), title: Text('Tentang'), dense: true, contentPadding: EdgeInsets.zero)),
+                    const PopupMenuItem(
+                      value: 'tree',
+                      height: 48,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 32, child: Icon(Icons.account_tree_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 12),
+                          Text('Pohon ICD', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'dict',
+                      height: 48,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 32, child: Icon(Icons.menu_book_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 12),
+                          Text('Glosarium Medis', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'generator',
+                      height: 48,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 32, child: Icon(Icons.auto_fix_high_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 12),
+                          Text('Cari Berdasarkan Gejala', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'about',
+                      height: 48,
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 32, child: Icon(Icons.info_outline, size: 20, color: Color(0xFF5F6368))),
+                          const SizedBox(width: 12),
+                          Text('Tentang MIDA', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface)),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ],
