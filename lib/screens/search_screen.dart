@@ -64,30 +64,43 @@ class _SearchScreenState extends State<SearchScreen> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
           color: widget.color.withValues(alpha: 0.05),
-          child: TextField(
-            controller: _controller,
-            decoration: InputDecoration(
-              hintText: 'Cari kode atau nama ${widget.type.label}...',
-              prefixIcon: const Icon(Icons.search),
-              suffixIcon: _controller.text.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        _controller.clear();
-                        setState(() => _query = '');
-                      },
-                    )
-                  : null,
-              filled: true,
-              fillColor: theme.colorScheme.surface,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildLogo('assets/images/logo-kemenkes.png'),
+                  _buildLogo('assets/images/bangga-melayani-bangsa-seeklogo.png'),
+                  _buildLogo('assets/images/logo-berakhlak.png'),
+                ],
               ),
-            ),
-            onChanged: (v) => setState(() => _query = v),
+              const SizedBox(height: 12),
+              TextField(
+                controller: _controller,
+                decoration: InputDecoration(
+                  hintText: 'Cari kode atau nama ${widget.type.label}...',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: _controller.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            _controller.clear();
+                            setState(() => _query = '');
+                          },
+                        )
+                      : null,
+                  filled: true,
+                  fillColor: theme.colorScheme.surface,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                onChanged: (v) => setState(() => _query = v),
+              ),
+            ],
           ),
         ),
         Expanded(
@@ -128,6 +141,13 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   bool get _showMoreVisible => !_isSearching && !_showAll && _hiddenCount > 0;
+
+  Widget _buildLogo(String path) {
+    return SizedBox(
+      height: 32,
+      child: Image.asset(path, fit: BoxFit.contain),
+    );
+  }
 }
 
 class _IcdCard extends StatelessWidget {
