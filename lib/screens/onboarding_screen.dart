@@ -86,7 +86,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            _BackgroundPattern(color: theme.colorScheme.primary),
             Column(
               children: [
                 const SizedBox(height: 56),
@@ -363,74 +362,6 @@ class _OnboardPage {
   final String details;
   final String? codeCount;
   const _OnboardPage(this.name, this.desc, this.icon, this.details, this.codeCount);
-}
-
-class _BackgroundPattern extends StatelessWidget {
-  final Color color;
-  const _BackgroundPattern({required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: CustomPaint(
-        painter: _PatternPainter(color.withValues(alpha: 0.04)),
-        size: Size.infinite,
-      ),
-    );
-  }
-}
-
-class _PatternPainter extends CustomPainter {
-  final Color color;
-  _PatternPainter(this.color);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    const icons = [
-      Icons.medical_services,
-      Icons.healing,
-      Icons.local_hospital,
-      Icons.favorite,
-      Icons.biotech,
-    ];
-
-    final positions = [
-      const Offset(0.1, 0.15),
-      const Offset(0.85, 0.1),
-      const Offset(0.05, 0.7),
-      const Offset(0.9, 0.75),
-      const Offset(0.5, 0.05),
-      const Offset(0.5, 0.9),
-      const Offset(0.2, 0.45),
-      const Offset(0.78, 0.4),
-    ];
-
-    final sizes = [28.0, 36.0, 24.0, 32.0, 20.0, 30.0, 22.0, 26.0];
-
-    for (var i = 0; i < positions.length; i++) {
-      final pos = positions[i];
-      final x = pos.dx * size.width;
-      final y = pos.dy * size.height;
-      final iconSize = sizes[i % sizes.length];
-
-      final textPainter = TextPainter(
-        text: TextSpan(
-          text: String.fromCharCode(icons[i % icons.length].codePoint),
-          style: TextStyle(
-            fontSize: iconSize,
-            fontFamily: 'MaterialIcons',
-            color: color,
-          ),
-        ),
-        textDirection: TextDirection.ltr,
-      );
-      textPainter.layout();
-      textPainter.paint(canvas, Offset(x - textPainter.width / 2, y - textPainter.height / 2));
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _FeatureBadge extends StatelessWidget {
