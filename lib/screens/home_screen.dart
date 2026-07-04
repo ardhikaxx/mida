@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.only(top: 2),
                         child: Text(
                           _labels[_selectedIndex],
-                          style: theme.textTheme.titleMedium?.copyWith(
+                          style: theme.textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.w800,
                             color: _colors[_selectedIndex],
                           ),
