@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: Container(
         height: 60,
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.85),
+          color: theme.colorScheme.surfaceContainerHigh,
           boxShadow: [
             BoxShadow(
               color: theme.shadowColor.withValues(alpha: 0.06),
