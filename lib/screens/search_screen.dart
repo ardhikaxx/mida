@@ -73,7 +73,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: [
                   _buildLogo('assets/images/logo-kemenkes.png'),
                   _buildLogo('assets/images/bangga-melayani-bangsa-seeklogo.png'),
-                  _buildLogo('assets/images/logo-berakhlak.png'),
+                  _buildLogo('assets/images/logo-berakhlak.png', height: 40),
                 ],
               ),
               const SizedBox(height: 12),
@@ -142,9 +142,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   bool get _showMoreVisible => !_isSearching && !_showAll && _hiddenCount > 0;
 
-  Widget _buildLogo(String path) {
+  Widget _buildLogo(String path, {double height = 32}) {
     return SizedBox(
-      height: 32,
+      height: height,
       child: Image.asset(path, fit: BoxFit.contain),
     );
   }
