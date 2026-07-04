@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(78),
+        preferredSize: const Size.fromHeight(66),
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
@@ -109,17 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ],
-                  ),
-                  const SizedBox(height: 8),
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOutCubic,
-                    height: 3,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      color: _colors[_selectedIndex],
-                      borderRadius: BorderRadius.circular(2),
-                    ),
                   ),
                 ],
               ),
