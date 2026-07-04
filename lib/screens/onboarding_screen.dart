@@ -9,7 +9,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final _controller = PageController();
+  final _controller = PageController(viewportFraction: 0.88);
   int _currentPage = 0;
 
   static const _pages = [
@@ -17,31 +17,57 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       'ICD-10',
       'Klasifikasi penyakit revisi ke-10 dari WHO',
       Icons.medical_services,
-      'ICD-10 adalah standar internasional untuk mengklasifikasikan penyakit, gangguan, cedera, dan berbagai kondisi kesehatan lainnya. Digunakan secara global untuk diagnosis, penelitian, dan pelaporan kesehatan.',
+      'ICD-10 adalah standar internasional untuk mengklasifikasikan penyakit, gangguan, cedera, dan berbagai kondisi kesehatan lainnya.',
+      '18.543',
     ),
     _OnboardPage(
       'ICD-MM',
       'Klasifikasi kematian ibu',
       Icons.pregnant_woman,
-      'ICD-MM (Maternal Mortality) menyediakan kode khusus untuk mengidentifikasi dan mengklasifikasikan penyebab kematian ibu terkait kehamilan, persalinan, dan masa nifas. Penting untuk pemantauan kesehatan ibu.',
+      'ICD-MM (Maternal Mortality) menyediakan kode khusus untuk penyebab kematian ibu terkait kehamilan, persalinan, dan masa nifas.',
+      '4.777',
     ),
     _OnboardPage(
       'ICD-PM',
       'Klasifikasi kematian perinatal',
       Icons.child_care,
-      'ICD-PM (Perinatal Mortality) digunakan untuk mengklasifikasikan kematian janin dan bayi baru lahir. Membantu dalam analisis penyebab kematian perinatal untuk meningkatkan perawatan ibu dan bayi.',
+      'ICD-PM (Perinatal Mortality) digunakan untuk mengklasifikasikan kematian janin dan bayi baru lahir.',
+      '838',
     ),
     _OnboardPage(
       'ICD-O',
       'Klasifikasi onkologi',
       Icons.health_and_safety,
-      'ICD-O (Oncology) mengklasifikasikan neoplasma berdasarkan morfologi (jenis sel tumor) dan topografi (lokasi anatomi). Digunakan dalam registri kanker dan penelitian onkologi.',
+      'ICD-O (Oncology) mengklasifikasikan neoplasma berdasarkan morfologi dan topografi, digunakan dalam registri kanker.',
+      '4.217',
     ),
     _OnboardPage(
       'ICD-9-CM',
       'Modifikasi klinis ICD revisi ke-9',
       Icons.healing,
-      'ICD-9-CM adalah versi modifikasi dari ICD-9 yang dikembangkan untuk penggunaan klinis di Amerika Serikat. Mencakup kode yang lebih rinci untuk diagnosis dan prosedur medis.',
+      'ICD-9-CM adalah versi modifikasi untuk penggunaan klinis dengan kode rinci untuk diagnosis dan prosedur medis.',
+      '4.626',
+    ),
+    _OnboardPage(
+      'Cari & Filter',
+      'Temukan kode dengan cepat',
+      Icons.search,
+      'Cari kode ICD berdasarkan kode, deskripsi, atau chapter. Filter realtime menampilkan hasil instan dari ribuan kode yang tersedia.',
+      null,
+    ),
+    _OnboardPage(
+      'Detail Lengkap',
+      'Informasi diagnosis menyeluruh',
+      Icons.description,
+      'Setiap kode dilengkapi informasi lengkap: kode, deskripsi, chapter, dan klasifikasi. Cocok untuk referensi diagnosis dan penelitian.',
+      null,
+    ),
+    _OnboardPage(
+      'Siap Digunakan',
+      'Semua ICD dalam satu aplikasi',
+      Icons.check_circle,
+      'Akses 5 klasifikasi ICD offline, pencarian cepat, dan informasi lengkap — kapan saja, di mana saja.',
+      null,
     ),
   ];
 
@@ -60,8 +86,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: SafeArea(
         child: Stack(
           children: [
+            _BackgroundPattern(color: theme.colorScheme.primary),
             Column(
               children: [
+                const SizedBox(height: 56),
                 Expanded(
                   child: PageView.builder(
                     controller: _controller,
@@ -69,50 +97,167 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     itemCount: _pages.length,
                     itemBuilder: (_, i) {
                       final page = _pages[i];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 40),
-                            Container(
-                              padding: const EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.primaryContainer,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Icon(
-                                page.icon,
-                                size: 64,
-                                color: theme.colorScheme.onPrimaryContainer,
+                      final isFeatureSlide = i >= 5 && i < _pages.length - 1;
+                      final isFinalSlide = i == _pages.length - 1;
+
+                      return AnimatedBuilder(
+                        animation: _controller,
+                        builder: (context, child) {
+                          double scale = 1.0;
+                          double opacity = 1.0;
+                          if (_controller.position.haveDimensions) {
+                            final pos = _controller.page ?? i.toDouble();
+                            final diff = (pos - i).abs();
+                            scale = 1.0 - (diff * 0.08).clamp(0, 0.15);
+                            opacity = 1.0 - (diff * 0.3).clamp(0, 0.5);
+                          }
+                          return Transform.scale(
+                            scale: scale,
+                            child: Opacity(
+                              opacity: opacity,
+                              child: child,
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Card(
+                            elevation: 2,
+                            shadowColor: theme.shadowColor.withValues(alpha: 0.08),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 28),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (!isFinalSlide) ...[
+                                    Container(
+                                      padding: const EdgeInsets.all(20),
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.primaryContainer,
+                                        borderRadius: BorderRadius.circular(18),
+                                      ),
+                                      child: Icon(
+                                        page.icon,
+                                        size: isFeatureSlide ? 44 : 52,
+                                        color: theme.colorScheme.onPrimaryContainer,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 24),
+                                    Text(
+                                      page.name,
+                                      style: theme.textTheme.headlineSmall?.copyWith(
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      page.desc,
+                                      style: theme.textTheme.titleSmall?.copyWith(
+                                        color: theme.colorScheme.primary,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    if (i < 5) ...[
+                                      const SizedBox(height: 6),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: theme.colorScheme.primary.withValues(alpha: 0.08),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          '${page.codeCount!} entri',
+                                          style: theme.textTheme.labelMedium?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: theme.colorScheme.primary,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      page.details,
+                                      textAlign: TextAlign.center,
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        color: theme.colorScheme.onSurfaceVariant,
+                                        height: 1.5,
+                                      ),
+                                    ),
+                                  ] else ...[
+                                    Container(
+                                      padding: const EdgeInsets.all(24),
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.primaryContainer,
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
+                                      child: Icon(
+                                        page.icon,
+                                        size: 80,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 28),
+                                    Text(
+                                      page.name,
+                                      style: theme.textTheme.headlineMedium?.copyWith(
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      page.desc,
+                                      style: theme.textTheme.titleMedium?.copyWith(
+                                        color: theme.colorScheme.primary,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      page.details,
+                                      textAlign: TextAlign.center,
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        color: theme.colorScheme.onSurfaceVariant,
+                                        height: 1.5,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 24),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        _FeatureBadge(
+                                          icon: Icons.offline_bolt,
+                                          label: 'Offline',
+                                          theme: theme,
+                                        ),
+                                        const SizedBox(width: 12),
+                                        _FeatureBadge(
+                                          icon: Icons.search,
+                                          label: 'Cepat',
+                                          theme: theme,
+                                        ),
+                                        const SizedBox(width: 12),
+                                        _FeatureBadge(
+                                          icon: Icons.storage,
+                                          label: '5 Klasifikasi',
+                                          theme: theme,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 28),
-                            Text(
-                              page.name,
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              page.desc,
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.titleSmall?.copyWith(
-                                color: theme.colorScheme.primary,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              page.details,
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                                height: 1.5,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       );
                     },
@@ -127,11 +272,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         children: List.generate(_pages.length, (i) {
                           return AnimatedContainer(
                             duration: const Duration(milliseconds: 300),
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            width: _currentPage == i ? 24 : 8,
-                            height: 8,
+                            margin: const EdgeInsets.symmetric(horizontal: 3),
+                            width: _currentPage == i ? 20 : 6,
+                            height: 6,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(3),
                               color: _currentPage == i
                                   ? theme.colorScheme.primary
                                   : theme.colorScheme.outlineVariant,
@@ -139,7 +284,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           );
                         }),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 16),
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton(
@@ -216,5 +361,110 @@ class _OnboardPage {
   final String desc;
   final IconData icon;
   final String details;
-  const _OnboardPage(this.name, this.desc, this.icon, this.details);
+  final String? codeCount;
+  const _OnboardPage(this.name, this.desc, this.icon, this.details, this.codeCount);
+}
+
+class _BackgroundPattern extends StatelessWidget {
+  final Color color;
+  const _BackgroundPattern({required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: CustomPaint(
+        painter: _PatternPainter(color.withValues(alpha: 0.04)),
+        size: Size.infinite,
+      ),
+    );
+  }
+}
+
+class _PatternPainter extends CustomPainter {
+  final Color color;
+  _PatternPainter(this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const icons = [
+      Icons.medical_services,
+      Icons.healing,
+      Icons.local_hospital,
+      Icons.favorite,
+      Icons.biotech,
+    ];
+
+    final positions = [
+      const Offset(0.1, 0.15),
+      const Offset(0.85, 0.1),
+      const Offset(0.05, 0.7),
+      const Offset(0.9, 0.75),
+      const Offset(0.5, 0.05),
+      const Offset(0.5, 0.9),
+      const Offset(0.2, 0.45),
+      const Offset(0.78, 0.4),
+    ];
+
+    final sizes = [28.0, 36.0, 24.0, 32.0, 20.0, 30.0, 22.0, 26.0];
+
+    for (var i = 0; i < positions.length; i++) {
+      final pos = positions[i];
+      final x = pos.dx * size.width;
+      final y = pos.dy * size.height;
+      final iconSize = sizes[i % sizes.length];
+
+      final textPainter = TextPainter(
+        text: TextSpan(
+          text: String.fromCharCode(icons[i % icons.length].codePoint),
+          style: TextStyle(
+            fontSize: iconSize,
+            fontFamily: 'MaterialIcons',
+            color: color,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(x - textPainter.width / 2, y - textPainter.height / 2));
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _FeatureBadge extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final ThemeData theme;
+  const _FeatureBadge({
+    required this.icon,
+    required this.label,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: theme.colorScheme.primary),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: theme.textTheme.labelMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
