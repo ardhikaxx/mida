@@ -15,7 +15,22 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 4), () {
       if (mounted) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const OnboardingScreen(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: ScaleTransition(
+                  scale: Tween<double>(begin: 0.92, end: 1.0).animate(
+                    CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic),
+                  ),
+                  child: child,
+                ),
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 500),
+          ),
         );
       }
     });
