@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/icd_code.dart';
 import '../services/icd_service.dart';
@@ -20,6 +21,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool _loading = true;
   bool _showAll = false;
   String _query = '';
+  Timer? _debounce;
   static const int _initialLimit = 100;
 
   @override
@@ -54,6 +56,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -86,6 +89,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       ? IconButton(
                           icon: const Icon(Icons.clear),
                           onPressed: () {
+                            _debounce?.cancel();
                             _controller.clear();
                             setState(() => _query = '');
                           },
@@ -98,7 +102,12 @@ class _SearchScreenState extends State<SearchScreen> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                onChanged: (v) => setState(() => _query = v),
+                onChanged: (v) {
+                  _debounce?.cancel();
+                  _debounce = Timer(const Duration(milliseconds: 300), () {
+                    setState(() => _query = v);
+                  });
+                },
               ),
             ],
           ),
