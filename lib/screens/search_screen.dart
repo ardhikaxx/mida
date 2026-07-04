@@ -106,8 +106,8 @@ class _SearchScreenState extends State<SearchScreen> {
         Expanded(
           child: _loading
               ? const Center(child: CircularProgressIndicator())
-              : ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
+                  : ListView.builder(
+                  padding: EdgeInsets.fromLTRB(12, 4, 12, MediaQuery.of(context).padding.bottom + 60),
                   itemCount: _displayList.length + (_showMoreVisible ? 1 : 0),
                   itemBuilder: (_, i) {
                     if (_showMoreVisible && i == _displayList.length) {
