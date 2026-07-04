@@ -88,9 +88,11 @@ class _HomeScreenState extends State<HomeScreen> {
             child: BackdropFilter(
               filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: List.generate(_types.length, (i) {
                   final isSelected = _selectedIndex == i;
-                  return Expanded(
+                  return Flexible(
+                    fit: FlexFit.loose,
                     child: GestureDetector(
                       onTap: () => setState(() => _selectedIndex = i),
                       behavior: HitTestBehavior.opaque,
@@ -98,8 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         duration: const Duration(milliseconds: 250),
                         curve: Curves.easeInOut,
                         padding: EdgeInsets.symmetric(
-                          horizontal: isSelected ? 14 : 0,
-                          vertical: isSelected ? 8 : 0,
+                          horizontal: 14,
+                          vertical: 8,
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(25),
