@@ -88,11 +88,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: BackdropFilter(
               filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: List.generate(_types.length, (i) {
                   final isSelected = _selectedIndex == i;
-                  return Flexible(
-                    fit: FlexFit.loose,
+                  return Expanded(
                     child: GestureDetector(
                       onTap: () => setState(() => _selectedIndex = i),
                       behavior: HitTestBehavior.opaque,
@@ -100,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         duration: const Duration(milliseconds: 250),
                         curve: Curves.easeInOut,
                         padding: EdgeInsets.symmetric(
-                          horizontal: 14,
+                          horizontal: isSelected ? 10 : 14,
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
@@ -110,28 +108,28 @@ class _HomeScreenState extends State<HomeScreen> {
                               : Colors.transparent,
                         ),
                         child: isSelected
-                            ? FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(_iconsFilled[i], color: _colors[i], size: 22),
-                                    const SizedBox(width: 6),
-                                    Text(
+                            ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(_iconsFilled[i], color: _colors[i], size: 20),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: Text(
                                       _labels[i],
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontSize: 12,
+                                        fontSize: 11,
                                         fontWeight: FontWeight.w600,
                                         color: _colors[i],
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               )
                             : Icon(
                                 _icons[i],
                                 color: theme.colorScheme.onSurfaceVariant,
-                                size: 22,
+                                size: 20,
                               ),
                       ),
                     ),
