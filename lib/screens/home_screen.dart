@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import '../services/icd_service.dart';
 import 'search_screen.dart';
@@ -29,6 +30,14 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   static const _icons = [
+    Icons.medical_services_outlined,
+    Icons.pregnant_woman_outlined,
+    Icons.child_care_outlined,
+    Icons.health_and_safety_outlined,
+    Icons.healing_outlined,
+  ];
+
+  static const _iconsFilled = [
     Icons.medical_services,
     Icons.pregnant_woman,
     Icons.child_care,
@@ -52,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(_labels[_selectedIndex]),
         centerTitle: true,
       ),
+      extendBody: true,
       body: IndexedStack(
         index: _selectedIndex,
         children: List.generate(_types.length, (i) {
@@ -59,35 +69,74 @@ class _HomeScreenState extends State<HomeScreen> {
         }),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         child: Container(
+          height: 70,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(35),
+            color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.85),
             boxShadow: [
               BoxShadow(
-                color: theme.shadowColor.withValues(alpha: 0.08),
-                blurRadius: 16,
-                offset: const Offset(0, 4),
+                color: theme.shadowColor.withValues(alpha: 0.06),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: NavigationBar(
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: (i) => setState(() => _selectedIndex = i),
-              elevation: 0,
-              backgroundColor: theme.colorScheme.surfaceContainerHigh,
-              indicatorColor: _colors[_selectedIndex].withValues(alpha: 0.15),
-              height: 64,
-              labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-              destinations: List.generate(_types.length, (i) {
-                return NavigationDestination(
-                  icon: Icon(_icons[i], color: theme.colorScheme.onSurfaceVariant),
-                  selectedIcon: Icon(_icons[i], color: _colors[i]),
-                  label: _labels[i],
-                );
-              }),
+            borderRadius: BorderRadius.circular(35),
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+              child: Row(
+                children: List.generate(_types.length, (i) {
+                  final isSelected = _selectedIndex == i;
+                  return Expanded(
+                    child: GestureDetector(
+                      onTap: () => setState(() => _selectedIndex = i),
+                      behavior: HitTestBehavior.opaque,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeInOut,
+                        margin: EdgeInsets.all(isSelected ? 6 : 0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: isSelected
+                              ? _colors[i].withValues(alpha: 0.15)
+                              : Colors.transparent,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              isSelected ? _iconsFilled[i] : _icons[i],
+                              color: isSelected ? _colors[i] : theme.colorScheme.onSurfaceVariant,
+                              size: 24,
+                            ),
+                            AnimatedSize(
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeInOut,
+                              alignment: Alignment.topCenter,
+                              child: isSelected
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 2),
+                                      child: Text(
+                                        _labels[i],
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                          color: _colors[i],
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
             ),
           ),
         ),
