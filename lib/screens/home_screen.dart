@@ -36,11 +36,20 @@ class _HomeScreenState extends State<HomeScreen> {
     Icons.healing,
   ];
 
+  static const _labels = [
+    'ICD-10',
+    'ICD-MM',
+    'ICD-PM',
+    'ICD-O',
+    'ICD-9-CM',
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(_types[_selectedIndex].label),
+        title: Text(_labels[_selectedIndex]),
         centerTitle: true,
       ),
       body: IndexedStack(
@@ -49,15 +58,39 @@ class _HomeScreenState extends State<HomeScreen> {
           return SearchScreen(type: _types[i], color: _colors[i]);
         }),
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (i) => setState(() => _selectedIndex = i),
-        destinations: List.generate(_types.length, (i) {
-          return NavigationDestination(
-            icon: Icon(_icons[i]),
-            label: _types[i].label,
-          );
-        }),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: theme.shadowColor.withValues(alpha: 0.08),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: NavigationBar(
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: (i) => setState(() => _selectedIndex = i),
+              elevation: 0,
+              backgroundColor: theme.colorScheme.surfaceContainerHigh,
+              indicatorColor: _colors[_selectedIndex].withValues(alpha: 0.15),
+              height: 64,
+              labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+              destinations: List.generate(_types.length, (i) {
+                return NavigationDestination(
+                  icon: Icon(_icons[i], color: theme.colorScheme.onSurfaceVariant),
+                  selectedIcon: Icon(_icons[i], color: _colors[i]),
+                  label: _labels[i],
+                );
+              }),
+            ),
+          ),
+        ),
       ),
     );
   }
