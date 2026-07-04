@@ -162,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     horizontal: isSelected ? 4 : 0,
                   ),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(22),
                     color: isSelected ? _colors[i] : Colors.transparent,
                   ),
                   child: Center(
