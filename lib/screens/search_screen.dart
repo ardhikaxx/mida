@@ -17,8 +17,10 @@ class _SearchScreenState extends State<SearchScreen> {
   final IcdService _service = IcdService();
   final TextEditingController _controller = TextEditingController();
   List<IcdCode> _allCodes = [];
-  List<IcdCode> _filtered = [];
   bool _loading = true;
+  bool _showAll = false;
+  String _query = '';
+  static const int _initialLimit = 100;
 
   @override
   void initState() {
@@ -30,24 +32,26 @@ class _SearchScreenState extends State<SearchScreen> {
     final codes = await _service.load(widget.type);
     setState(() {
       _allCodes = codes;
-      _filtered = codes;
       _loading = false;
     });
   }
 
-  void _filter(String query) {
-    final q = query.toLowerCase().trim();
-    setState(() {
-      _filtered = q.isEmpty
-          ? _allCodes
-          : _allCodes.where((c) {
-              return c.code.toLowerCase().contains(q) ||
-                  c.description.toLowerCase().contains(q) ||
-                  (c.chapter?.toLowerCase().contains(q) ?? false) ||
-                  (c.chapterTitle?.toLowerCase().contains(q) ?? false);
-            }).toList();
-    });
+  List<IcdCode> get _filtered {
+    final q = _query.trim().toLowerCase();
+    if (q.isEmpty) return _allCodes;
+    return _allCodes.where((c) {
+      return c.code.toLowerCase().contains(q) ||
+          c.description.toLowerCase().contains(q) ||
+          (c.chapter?.toLowerCase().contains(q) ?? false) ||
+          (c.chapterTitle?.toLowerCase().contains(q) ?? false);
+    }).toList();
   }
+
+  bool get _isSearching => _query.trim().isNotEmpty;
+  List<IcdCode> get _displayList =>
+      _showAll || _isSearching ? _filtered : _filtered.take(_initialLimit).toList();
+  int get _hiddenCount =>
+      _filtered.length - _initialLimit;
 
   @override
   void dispose() {
@@ -73,7 +77,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       icon: const Icon(Icons.clear),
                       onPressed: () {
                         _controller.clear();
-                        _filter('');
+                        setState(() => _query = '');
                       },
                     )
                   : null,
@@ -84,7 +88,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 borderSide: BorderSide.none,
               ),
             ),
-            onChanged: _filter,
+            onChanged: (v) => setState(() => _query = v),
           ),
         ),
         Expanded(
@@ -92,9 +96,21 @@ class _SearchScreenState extends State<SearchScreen> {
               ? const Center(child: CircularProgressIndicator())
               : ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
-                  itemCount: _filtered.length,
+                  itemCount: _displayList.length + (_showMoreVisible ? 1 : 0),
                   itemBuilder: (_, i) {
-                    final item = _filtered[i];
+                    if (_showMoreVisible && i == _displayList.length) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Center(
+                          child: TextButton.icon(
+                            onPressed: () => setState(() => _showAll = true),
+                            icon: const Icon(Icons.expand_more),
+                            label: Text('Lihat semua ($_hiddenCount lainnya)'),
+                          ),
+                        ),
+                      );
+                    }
+                    final item = _displayList[i];
                     return Card(
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       child: ListTile(
@@ -139,4 +155,7 @@ class _SearchScreenState extends State<SearchScreen> {
       ],
     );
   }
+
+  bool get _showMoreVisible =>
+      !_isSearching && !_showAll && _hiddenCount > 0;
 }
