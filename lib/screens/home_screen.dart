@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 36),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 42),
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 5, 20, 5),
+            padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 8, 20, 8),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
