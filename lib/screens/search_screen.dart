@@ -73,7 +73,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: [
                   _buildLogo('assets/images/logo-kemenkes.png'),
                   _buildLogo('assets/images/bangga-melayani-bangsa-seeklogo.png'),
-                  _buildLogo('assets/images/logo-berakhlak.png', height: 40),
+                  _buildLogo('assets/images/logo-berakhlak.png', height: 48),
                 ],
               ),
               const SizedBox(height: 12),
