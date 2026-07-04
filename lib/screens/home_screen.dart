@@ -110,20 +110,23 @@ class _HomeScreenState extends State<HomeScreen> {
                               : Colors.transparent,
                         ),
                         child: isSelected
-                            ? Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(_iconsFilled[i], color: _colors[i], size: 22),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    _labels[i],
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: _colors[i],
+                            ? FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(_iconsFilled[i], color: _colors[i], size: 22),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      _labels[i],
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: _colors[i],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               )
                             : Icon(
                                 _icons[i],
