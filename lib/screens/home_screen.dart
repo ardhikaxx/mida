@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(72),
+        preferredSize: const Size.fromHeight(78),
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
@@ -71,49 +71,53 @@ class _HomeScreenState extends State<HomeScreen> {
           child: SafeArea(
             bottom: false,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        'MIDA',
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Mobile ICD Database Application',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          _labels[_selectedIndex],
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            height: 1.2,
+                  RichText(
+                    text: TextSpan(
+                      style: theme.textTheme.labelSmall,
+                      children: [
+                        TextSpan(
+                          text: 'MIDA',
+                          style: TextStyle(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 1.5,
                           ),
                         ),
-                      ),
-                    ],
+                        TextSpan(
+                          text: '  ·  ',
+                          style: TextStyle(
+                            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'mobile icd database application',
+                          style: TextStyle(
+                            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
+                  Text(
+                    _labels[_selectedIndex],
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      height: 1.1,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOutCubic,
                     height: 3,
-                    width: 48,
+                    width: 40,
                     decoration: BoxDecoration(
                       color: _colors[_selectedIndex],
                       borderRadius: BorderRadius.circular(2),
