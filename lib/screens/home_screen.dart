@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 60),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 64),
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
@@ -84,14 +84,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: theme.colorScheme.primary,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1.5,
-                          fontSize: 13,
+                          fontSize: 14,
                         ),
                       ),
                       TextSpan(
                         text: 'mobile icd database application',
                         style: TextStyle(
                           color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                          fontSize: 11,
+                          fontSize: 12,
                         ),
                       ),
                     ],
