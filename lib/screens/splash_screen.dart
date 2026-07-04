@@ -18,8 +18,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    final completed = prefs.getBool('onboarding_completed') ?? false;
+    bool completed = false;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      completed = prefs.getBool('onboarding_completed') ?? false;
+    } catch (_) {}
 
     if (!mounted) return;
 

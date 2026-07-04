@@ -290,7 +290,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         child: FilledButton(
                           onPressed: () {
                             if (isLast) {
-                              _goToHome(context);
+                              _goToHome();
                             } else {
                               _controller.nextPage(
                                 duration: const Duration(milliseconds: 400),
@@ -339,7 +339,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               top: 12,
               right: 8,
               child: TextButton(
-                onPressed: () => _goToHome(context),
+                onPressed: () => _goToHome(),
                 child: const Text('Lewati'),
               ),
             ),
@@ -349,10 +349,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Future<void> _goToHome(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboarding_completed', true);
-    if (!context.mounted) return;
+  Future<void> _goToHome() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('onboarding_completed', true);
+    } catch (_) {}
+    if (!mounted) return;
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const HomeScreen()),
     );
