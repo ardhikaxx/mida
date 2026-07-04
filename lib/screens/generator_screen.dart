@@ -27,6 +27,39 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
     IcdClassification.icd9CM,
   ];
 
+  static const _idEnMap = <String, List<String>>{
+    'demam': ['fever', 'pyrexia', 'hyperthermia', 'febrile'],
+    'batuk': ['cough', 'tussis', 'whooping'],
+    'nyeri': ['pain', 'ache', 'sore', 'tender', 'hurt', 'algia'],
+    'sakit': ['pain', 'ache', 'sore', 'tender', 'hurt'],
+    'sesak': ['dyspnea', 'shortness', 'breathless', 'respiratory distress'],
+    'pusing': ['dizziness', 'vertigo', 'syncope', 'lightheaded'],
+    'kepala': ['head', 'cranial', 'cephalgia', 'headache'],
+    'mual': ['nausea', 'vomiting', 'emesis', 'regurgitation'],
+    'diare': ['diarrhea', 'diarrhoea', 'loose stool'],
+    'ruam': ['rash', 'eruption', 'exanthem', 'urticaria', 'hives'],
+    'bengkak': ['swelling', 'edema', 'oedema', 'inflammation', 'tumor', 'mass'],
+    'lemah': ['weakness', 'fatigue', 'asthenia', 'malaise', 'lethargy'],
+    'berdarah': ['hemorrhage', 'bleeding', 'blood loss'],
+    'infeksi': ['infection', 'sepsis', 'abscess', 'contagious'],
+    'luka': ['wound', 'injury', 'trauma', 'laceration', 'lesion'],
+    'batu': ['stone', 'calculus', 'lithiasis'],
+    'radang': ['itis', 'inflammation', 'inflammatory'],
+    'tumor': ['tumor', 'tumour', 'neoplasm', 'cancer', 'carcinoma', 'malignant', 'benign'],
+    'lumpuh': ['paralysis', 'palsy', 'paresis', 'paralytic'],
+    'buta': ['blindness', 'blind', 'vision loss'],
+    'tuli': ['deafness', 'hearing loss'],
+    'sulit': ['difficulty', 'disturbance', 'disorder', 'dysfunction'],
+    'turun': ['prolapse', 'descent', 'ptosis'],
+    'benda': ['foreign body', 'object'],
+    'keracunan': ['poisoning', 'intoxication', 'toxic'],
+    'alergi': ['allergy', 'allergic', 'hypersensitivity'],
+    'kehamilan': ['pregnancy', 'pregnant', 'obstetric', 'maternal'],
+    'bayi': ['infant', 'neonatal', 'newborn', 'perinatal'],
+    'kencing': ['urinary', 'urination', 'micturition', 'dysuria'],
+    'buang': ['defecation', 'bowel', 'stool', 'feces', 'faeces'],
+  };
+
   @override
   void dispose() {
     _debounce?.cancel();
@@ -44,36 +77,56 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
     });
 
     final all = <_SearchResult>[];
+    final words = q.split(RegExp(r'\s+'));
+    final searchTerms = <String>{q};
+    for (final w in words) {
+      searchTerms.add(w);
+      if (_idEnMap.containsKey(w)) {
+        searchTerms.addAll(_idEnMap[w]!);
+      }
+    }
+
     for (final cls in _classifications) {
       try {
         final codes = await _service.load(cls);
         for (final c in codes) {
-          int score = 0;
           final codeLower = c.code.toLowerCase();
           final descLower = c.description.toLowerCase();
 
-          if (codeLower == q) {
-            score = 100;
-          } else if (codeLower.startsWith(q)) {
-            score = 80;
-          } else if (codeLower.contains(q)) {
-            score = 60;
-          } else if (descLower.contains(q)) {
-            final idx = descLower.indexOf(q);
-            score = 50 - (idx / descLower.length * 20).round();
-          }
-
-          if (score > 0) {
-            all.add(_SearchResult(c, cls.label, score));
+          for (final term in searchTerms) {
+            int score = 0;
+            if (codeLower == term) {
+              score = 100;
+            } else if (codeLower.startsWith(term)) {
+              score = 85;
+            } else if (codeLower.contains(term)) {
+              score = 65;
+            } else if (descLower.contains(term)) {
+              final idx = descLower.indexOf(term);
+              score = (50 - (idx / descLower.length * 20).round()).clamp(10, 50);
+            }
+            if (score > 0) {
+              all.add(_SearchResult(c, cls.label, score));
+              break;
+            }
           }
         }
       } catch (_) {}
     }
 
     all.sort((a, b) => b.score.compareTo(a.score));
+
+    final seen = <String>{};
+    final deduped = <_SearchResult>[];
+    for (final r in all) {
+      if (seen.add('${r.code.code}|${r.classification}')) {
+        deduped.add(r);
+      }
+    }
+
     if (mounted) {
       setState(() {
-        _results = all.take(20).toList();
+        _results = deduped.take(20).toList();
         _loading = false;
       });
     }
