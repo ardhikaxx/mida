@@ -37,14 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Icons.healing_outlined,
   ];
 
-  static const _iconsFilled = [
-    Icons.medical_services,
-    Icons.pregnant_woman,
-    Icons.child_care,
-    Icons.health_and_safety,
-    Icons.healing,
-  ];
-
   static const _labels = [
     'ICD-10',
     'ICD-MM',
@@ -108,28 +100,18 @@ class _HomeScreenState extends State<HomeScreen> {
                               : Colors.transparent,
                         ),
                         child: isSelected
-                            ? Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(_iconsFilled[i], color: _colors[i], size: 20),
-                                  const SizedBox(width: 4),
-                                  Flexible(
-                                    child: Text(
-                                      _labels[i],
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                        color: _colors[i],
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                            ? Text(
+                                _labels[i],
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700,
+                                  color: _colors[i],
+                                ),
                               )
                             : Icon(
                                 _icons[i],
                                 color: theme.colorScheme.onSurfaceVariant,
-                                size: 20,
+                                size: 22,
                               ),
                       ),
                     ),
