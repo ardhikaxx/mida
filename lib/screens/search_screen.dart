@@ -64,19 +64,19 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   static const _bodyParts = <String, List<String>>{
-    'Tengkorak & Saraf': ['6', 'G'],
-    'Mata': ['7', 'H'],
-    'Telinga': ['8'],
-    'Mulut & Tenggorokan': ['10', '11', 'J', 'K'],
-    'Jantung & Pembuluh': ['9', 'I'],
-    'Paru & Pernapasan': ['10', 'J'],
-    'Perut & Pencernaan': ['11', 'K'],
-    'Kulit': ['12', 'L'],
-    'Tulang & Otot': ['13', 'M'],
-    'Ginjal & Kelamin': ['14', 'N'],
-    'Darah': ['3', 'D'],
-    'Hormon & Metabolik': ['4', 'E'],
-    'Mental & Perilaku': ['5', 'F'],
+    'Tengkorak & Saraf': ['head', 'brain', 'cranial', 'cerebral', 'neurolog', 'nerve', 'spinal', 'mening'],
+    'Mata': ['eye', 'ocular', 'ophthalmi', 'retina', 'cornea', 'conjunctiv', 'lens', 'vision', 'blind'],
+    'Telinga': ['ear', 'otitis', 'audiolog', 'hearing', 'tympanic', 'cochlear'],
+    'Mulut & Tenggorokan': ['mouth', 'oral', 'throat', 'pharynx', 'larynx', 'tonsil', 'gingiva', 'tongue', 'salivary', 'esophag'],
+    'Jantung & Pembuluh': ['heart', 'cardiac', 'cardiovascular', 'myocardi', 'coronary', 'valv', 'arrhythmi', 'pericard', 'endocard', 'atheroscler', 'hypertension', 'blood pressure'],
+    'Paru & Pernapasan': ['lung', 'pulmonary', 'respirat', 'bronch', 'pneumon', 'asthma', 'pleura', 'trachea', 'emphysema', 'tubercul'],
+    'Perut & Pencernaan': ['stomach', 'gastr', 'intestin', 'colon', 'rectal', 'hepat', 'liver', 'pancrea', 'bile', 'gallbladder', 'hernia', 'appendi', 'periton'],
+    'Kulit': ['skin', 'dermat', 'rash', 'urticaria', 'eczema', 'psoria', 'melanoma', 'ulcer', 'subcutane'],
+    'Tulang & Otot': ['bone', 'skeletal', 'muscle', 'fracture', 'arthr', 'joint', 'osteo', 'rheum', 'spine', 'vertebr', 'ligament', 'tendon'],
+    'Ginjal & Kelamin': ['kidney', 'ren', 'urinar', 'bladder', 'prostat', 'uterus', 'ovarian', 'cervi', 'vagin', 'penile', 'testi', 'genit', 'neonat'],
+    'Darah': ['blood', 'anemia', 'hematolog', 'leukemia', 'lymph', 'coagul', 'thrombocyt', 'hemoglobin', 'hemorrhag'],
+    'Hormon & Metabolik': ['thyroid', 'diabetes', 'hormon', 'metabol', 'pituit', 'adrenal', 'obes', 'nutrition', 'vitamin'],
+    'Mental & Perilaku': ['mental', 'psych', 'anxiety', 'depress', 'schizo', 'personality', 'disorder', 'dementia', 'alcohol', 'substance', 'sleep'],
   };
 
   List<IcdCode> get _filtered {
@@ -94,8 +94,11 @@ class _SearchScreenState extends State<SearchScreen> {
       result = result.where((c) => c.chapter == _selectedChapter).toList();
     }
     if (_selectedBodyPart != null) {
-      final chapters = _bodyParts[_selectedBodyPart]!;
-      result = result.where((c) => c.chapter != null && chapters.contains(c.chapter)).toList();
+      final keywords = _bodyParts[_selectedBodyPart]!;
+      result = result.where((c) {
+        final desc = c.description.toLowerCase();
+        return keywords.any((k) => desc.contains(k));
+      }).toList();
     }
     return result;
   }
