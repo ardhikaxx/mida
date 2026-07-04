@@ -15,28 +15,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   static const _pages = [
     _OnboardPage(
       'ICD-10',
-      'International Statistical Classification of Diseases and Related Health Problems, 10th Revision',
+      'Klasifikasi penyakit revisi ke-10 dari WHO',
       Icons.medical_services,
+      'ICD-10 adalah standar internasional untuk mengklasifikasikan penyakit, gangguan, cedera, dan berbagai kondisi kesehatan lainnya. Digunakan secara global untuk diagnosis, penelitian, dan pelaporan kesehatan.',
     ),
     _OnboardPage(
       'ICD-MM',
-      'ICD for Maternal Mortality',
+      'Klasifikasi kematian ibu',
       Icons.pregnant_woman,
+      'ICD-MM (Maternal Mortality) menyediakan kode khusus untuk mengidentifikasi dan mengklasifikasikan penyebab kematian ibu terkait kehamilan, persalinan, dan masa nifas. Penting untuk pemantauan kesehatan ibu.',
     ),
     _OnboardPage(
       'ICD-PM',
-      'ICD for Perinatal Mortality',
+      'Klasifikasi kematian perinatal',
       Icons.child_care,
+      'ICD-PM (Perinatal Mortality) digunakan untuk mengklasifikasikan kematian janin dan bayi baru lahir. Membantu dalam analisis penyebab kematian perinatal untuk meningkatkan perawatan ibu dan bayi.',
     ),
     _OnboardPage(
       'ICD-O',
-      'ICD for Oncology — Morphology & Topography',
+      'Klasifikasi onkologi',
       Icons.health_and_safety,
+      'ICD-O (Oncology) mengklasifikasikan neoplasma berdasarkan morfologi (jenis sel tumor) dan topografi (lokasi anatomi). Digunakan dalam registri kanker dan penelitian onkologi.',
     ),
     _OnboardPage(
       'ICD-9-CM',
-      'ICD, 9th Revision, Clinical Modification',
+      'Modifikasi klinis ICD revisi ke-9',
       Icons.healing,
+      'ICD-9-CM adalah versi modifikasi dari ICD-9 yang dikembangkan untuk penggunaan klinis di Amerika Serikat. Mencakup kode yang lebih rinci untuk diagnosis dan prosedur medis.',
     ),
   ];
 
@@ -82,11 +87,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 itemCount: _pages.length,
                 itemBuilder: (_, i) {
                   final page = _pages[i];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        const SizedBox(height: 20),
                         Container(
                           padding: const EdgeInsets.all(28),
                           decoration: BoxDecoration(
@@ -99,22 +105,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             color: theme.colorScheme.onPrimaryContainer,
                           ),
                         ),
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 32),
                         Text(
                           page.name,
                           style: theme.textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.w800,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 8),
                         Text(
                           page.desc,
                           textAlign: TextAlign.center,
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                            height: 1.4,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
+                        const SizedBox(height: 20),
+                        Text(
+                          page.details,
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            height: 1.5,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   );
@@ -185,5 +201,6 @@ class _OnboardPage {
   final String name;
   final String desc;
   final IconData icon;
-  const _OnboardPage(this.name, this.desc, this.icon);
+  final String details;
+  const _OnboardPage(this.name, this.desc, this.icon, this.details);
 }
