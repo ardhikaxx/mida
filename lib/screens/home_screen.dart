@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/icd_service.dart';
 import 'about_screen.dart';
 import 'generator_screen.dart';
+import 'icd_tree_screen.dart';
+import 'medical_dict_screen.dart';
 import 'search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -110,13 +112,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(width: 8),
                 GestureDetector(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())),
-                  child: Icon(Icons.info_outline, size: 20, color: theme.colorScheme.onSurfaceVariant),
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const IcdTreeScreen())),
+                  child: Icon(Icons.account_tree_outlined, size: 20, color: theme.colorScheme.onSurfaceVariant),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
+                GestureDetector(
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MedicalDictScreen())),
+                  child: Icon(Icons.menu_book_outlined, size: 20, color: theme.colorScheme.onSurfaceVariant),
+                ),
+                const SizedBox(width: 12),
                 GestureDetector(
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const GeneratorScreen())),
                   child: Icon(Icons.auto_fix_high_outlined, size: 20, color: theme.colorScheme.primary),
+                ),
+                const SizedBox(width: 12),
+                GestureDetector(
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen())),
+                  child: Icon(Icons.info_outline, size: 20, color: theme.colorScheme.onSurfaceVariant),
                 ),
               ],
             ),
