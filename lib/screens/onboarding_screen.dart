@@ -60,26 +60,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-              child: Row(
-                children: [
-                  Text(
-                    'MIDA',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 1.5,
-                    ),
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () => _goToHome(context),
-                    child: const Text('Lewati'),
-                  ),
-                ],
-              ),
-            ),
             Expanded(
               child: PageView.builder(
                 controller: _controller,
@@ -87,25 +67,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 itemCount: _pages.length,
                 itemBuilder: (_, i) {
                   final page = _pages[i];
-                  return SingleChildScrollView(
+                  return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 20),
+                        Text(
+                          'MIDA',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
                         Container(
-                          padding: const EdgeInsets.all(28),
+                          padding: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(24),
+                            borderRadius: BorderRadius.circular(20),
                           ),
                           child: Icon(
                             page.icon,
-                            size: 72,
+                            size: 64,
                             color: theme.colorScheme.onPrimaryContainer,
                           ),
                         ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 28),
                         Text(
                           page.name,
                           style: theme.textTheme.headlineMedium?.copyWith(
@@ -130,7 +118,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             height: 1.5,
                           ),
                         ),
-                        const SizedBox(height: 20),
                       ],
                     ),
                   );
@@ -143,22 +130,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(_pages.length, (i) {
-                      return AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: _currentPage == i ? 24 : 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: _currentPage == i
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.outlineVariant,
+                    children: [
+                      ...List.generate(_pages.length, (i) {
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          width: _currentPage == i ? 24 : 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: _currentPage == i
+                                ? theme.colorScheme.primary
+                                : theme.colorScheme.outlineVariant,
+                          ),
+                        );
+                      }),
+                      const SizedBox(width: 24),
+                      TextButton(
+                        onPressed: () => _goToHome(context),
+                        child: Text(
+                          isLast ? '' : 'Lewati',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                         ),
-                      );
-                    }),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton(
