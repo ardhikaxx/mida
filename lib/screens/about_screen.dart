@@ -51,30 +51,23 @@ class AboutScreen extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [color, color.withValues(alpha: 0.7)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4)),
       ),
       padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 24),
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.medical_services_outlined, size: 40, color: Colors.white),
+          SizedBox(
+            height: 72,
+            child: Image.asset('assets/images/logo-kemkes-new.png', fit: BoxFit.contain),
           ),
           const SizedBox(height: 16),
           Text(
             'MIDA',
             style: theme.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w800,
-              color: Colors.white,
+              color: color,
               letterSpacing: 2,
             ),
           ),
@@ -82,20 +75,20 @@ class AboutScreen extends StatelessWidget {
           Text(
             'Mobile ICD Database Application',
             style: theme.textTheme.titleSmall?.copyWith(
-              color: Colors.white.withValues(alpha: 0.85),
+              color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 4),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: color.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               'Versi 1.0.0',
               style: theme.textTheme.labelSmall?.copyWith(
-                color: Colors.white.withValues(alpha: 0.9),
+                color: color,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -105,7 +98,7 @@ class AboutScreen extends StatelessWidget {
             'Aplikasi pencarian kode ICD offline untuk tenaga kesehatan dan mahasiswa kedokteran. Mendukung 5 klasifikasi: ICD-10, ICD-MM, ICD-PM, ICD-O, dan ICD-9-CM.',
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: Colors.white.withValues(alpha: 0.85),
+              color: theme.colorScheme.onSurfaceVariant,
               height: 1.5,
             ),
           ),
