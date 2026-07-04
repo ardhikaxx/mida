@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 40),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 34),
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
@@ -71,33 +71,29 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 4, 20, 4),
+            padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 2, 20, 2),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'MIDA',
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.5,
-                      ),
-                    ),
-                    Text(
-                      'mobile icd database application',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                      ),
-                    ),
-                  ],
+                Text(
+                  'MIDA',
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'mobile icd database application',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  ),
                 ),
                 const Spacer(),
                 Text(
                   _labels[_selectedIndex],
-                  style: theme.textTheme.titleLarge?.copyWith(
+                  style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: _colors[_selectedIndex],
                   ),
