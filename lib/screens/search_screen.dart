@@ -18,6 +18,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final IcdService _service = IcdService();
   final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   List<IcdCode> _allCodes = [];
   bool _loading = true;
   bool _showAll = false;
@@ -41,6 +42,24 @@ class _SearchScreenState extends State<SearchScreen> {
       _chapters = chapters;
       _loading = false;
     });
+  }
+
+  List<IcdCode> get _suggestions {
+    final q = _query.trim().toLowerCase();
+    if (q.isEmpty) return [];
+    return _allCodes.where((c) {
+      return c.code.toLowerCase().contains(q) ||
+          c.description.toLowerCase().contains(q);
+    }).take(5).toList();
+  }
+
+  bool get _showSuggestions => _focusNode.hasFocus && _query.trim().isNotEmpty;
+
+  void _selectSuggestion(IcdCode code) {
+    _controller.text = code.code;
+    _controller.selection = TextSelection.collapsed(offset: code.code.length);
+    _focusNode.unfocus();
+    setState(() => _query = code.code);
   }
 
   List<IcdCode> get _filtered {
@@ -69,6 +88,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void dispose() {
     _debounce?.cancel();
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -93,6 +113,7 @@ class _SearchScreenState extends State<SearchScreen> {
               const SizedBox(height: 12),
               TextField(
                 controller: _controller,
+                focusNode: _focusNode,
                 decoration: InputDecoration(
                   hintText: 'Cari kode atau nama ${widget.type.label}...',
                   prefixIcon: const Icon(Icons.search),
@@ -123,6 +144,71 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
           ),
         ),
+        if (_showSuggestions && _suggestions.isNotEmpty)
+          Container(
+            margin: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: theme.shadowColor.withValues(alpha: 0.1),
+                  blurRadius: 16,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(_suggestions.length, (i) {
+                final s = _suggestions[i];
+                final isLast = i == _suggestions.length - 1;
+                return InkWell(
+                  onTap: () => _selectSuggestion(s),
+                  borderRadius: BorderRadius.vertical(
+                    top: i == 0 ? const Radius.circular(16) : Radius.zero,
+                    bottom: isLast ? const Radius.circular(16) : Radius.zero,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(14, 12, 14, isLast ? 12 : 8),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: widget.color.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            s.code,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: widget.color,
+                              fontSize: 11,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            s.description,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                        Icon(Icons.search, size: 16, color: theme.colorScheme.outline),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
         if (!_loading && _chapters.length > 1)
           SizedBox(
             height: 40,
@@ -194,7 +280,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       );
                     }
                     final item = _displayList[i];
-                    return _IcdCard(item: item, color: widget.color, theme: theme);
+                    return _IcdCard(item: item, color: widget.color, theme: theme, query: _query);
                   },
                 ),
         ),
@@ -216,11 +302,13 @@ class _IcdCard extends StatelessWidget {
   final IcdCode item;
   final Color color;
   final ThemeData theme;
+  final String query;
 
   const _IcdCard({
     required this.item,
     required this.color,
     required this.theme,
+    this.query = '',
   });
 
   void _copyCode(BuildContext context) {
@@ -232,6 +320,36 @@ class _IcdCard extends StatelessWidget {
         behavior: SnackBarBehavior.floating,
       ),
     );
+  }
+
+  List<InlineSpan> _highlight(String text, TextStyle baseStyle) {
+    final q = query.trim().toLowerCase();
+    if (q.isEmpty) return [TextSpan(text: text, style: baseStyle)];
+
+    final lower = text.toLowerCase();
+    final spans = <InlineSpan>[];
+    int start = 0;
+
+    while (true) {
+      final idx = lower.indexOf(q, start);
+      if (idx == -1) break;
+      if (idx > start) {
+        spans.add(TextSpan(text: text.substring(start, idx), style: baseStyle));
+      }
+      spans.add(TextSpan(
+        text: text.substring(idx, idx + q.length),
+        style: baseStyle.copyWith(
+          backgroundColor: color.withValues(alpha: 0.25),
+          fontWeight: FontWeight.w800,
+          color: color,
+        ),
+      ));
+      start = idx + q.length;
+    }
+    if (start < text.length) {
+      spans.add(TextSpan(text: text.substring(start), style: baseStyle));
+    }
+    return spans;
   }
 
   @override
@@ -269,15 +387,16 @@ class _IcdCard extends StatelessWidget {
                         color: color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Text(
-                        item.code,
+                      child: RichText(
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          color: color,
-                          fontSize: 12,
-                          letterSpacing: 1,
-                          height: 1.3,
+                        text: TextSpan(
+                          children: _highlight(item.code, TextStyle(
+                            fontWeight: FontWeight.w800,
+                            color: color,
+                            fontSize: 12,
+                            letterSpacing: 1,
+                            height: 1.3,
+                          )),
                         ),
                       ),
                     ),
@@ -287,12 +406,14 @@ class _IcdCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          item.description,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            height: 1.35,
+                        RichText(
+                          text: TextSpan(
+                            children: _highlight(item.description, TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              height: 1.35,
+                              color: theme.colorScheme.onSurface,
+                            )),
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
