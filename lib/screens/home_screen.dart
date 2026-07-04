@@ -1,4 +1,3 @@
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import '../services/icd_service.dart';
 import 'search_screen.dart';
@@ -60,66 +59,72 @@ class _HomeScreenState extends State<HomeScreen> {
           return SearchScreen(type: _types[i], color: _colors[i]);
         }),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-        child: Container(
-          height: 64,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(35),
-            color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.85),
-            boxShadow: [
-              BoxShadow(
-                color: theme.shadowColor.withValues(alpha: 0.06),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(35),
-            child: BackdropFilter(
-              filter: ui.ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-              child: Row(
-                children: List.generate(_types.length, (i) {
-                  final isSelected = _selectedIndex == i;
-                  return Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _selectedIndex = i),
-                      behavior: HitTestBehavior.opaque,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 250),
-                        curve: Curves.easeInOut,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: isSelected ? 10 : 14,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: isSelected
-                              ? _colors[i].withValues(alpha: 0.15)
-                              : Colors.transparent,
-                        ),
-                        child: isSelected
-                            ? Text(
+      bottomNavigationBar: Container(
+        height: 60,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.85),
+          boxShadow: [
+            BoxShadow(
+              color: theme.shadowColor.withValues(alpha: 0.06),
+              blurRadius: 16,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: List.generate(_types.length, (i) {
+            final isSelected = _selectedIndex == i;
+            return Expanded(
+              child: GestureDetector(
+                onTap: () => setState(() => _selectedIndex = i),
+                behavior: HitTestBehavior.opaque,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOutCubic,
+                  margin: EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: isSelected ? 4 : 0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: isSelected
+                        ? _colors[i].withValues(alpha: 0.12)
+                        : Colors.transparent,
+                  ),
+                  child: Center(
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 200),
+                      transitionBuilder: (child, anim) =>
+                          FadeTransition(opacity: anim, child: child),
+                      child: isSelected
+                          ? Padding(
+                              key: const ValueKey('text'),
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              child: Text(
                                 _labels[i],
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
                                   color: _colors[i],
+                                  letterSpacing: 0.3,
                                 ),
-                              )
-                            : Icon(
+                              ),
+                            )
+                          : Padding(
+                              key: const ValueKey('icon'),
+                              padding: const EdgeInsets.all(8),
+                              child: Icon(
                                 _icons[i],
                                 color: theme.colorScheme.onSurfaceVariant,
-                                size: 22,
+                                size: 20,
                               ),
-                      ),
+                            ),
                     ),
-                  );
-                }),
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          }),
         ),
       ),
     );
