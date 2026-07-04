@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         child: Container(
-          height: 70,
+          height: 64,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(35),
             color: theme.colorScheme.surfaceContainerHigh.withValues(alpha: 0.85),
@@ -97,41 +97,37 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 250),
                         curve: Curves.easeInOut,
-                        margin: EdgeInsets.all(isSelected ? 6 : 0),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isSelected ? 14 : 0,
+                          vertical: isSelected ? 8 : 0,
+                        ),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(25),
                           color: isSelected
                               ? _colors[i].withValues(alpha: 0.15)
                               : Colors.transparent,
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              isSelected ? _iconsFilled[i] : _icons[i],
-                              color: isSelected ? _colors[i] : theme.colorScheme.onSurfaceVariant,
-                              size: 24,
-                            ),
-                            AnimatedSize(
-                              duration: const Duration(milliseconds: 200),
-                              curve: Curves.easeInOut,
-                              alignment: Alignment.topCenter,
-                              child: isSelected
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(top: 2),
-                                      child: Text(
-                                        _labels[i],
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w600,
-                                          color: _colors[i],
-                                        ),
-                                      ),
-                                    )
-                                  : const SizedBox.shrink(),
-                            ),
-                          ],
-                        ),
+                        child: isSelected
+                            ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(_iconsFilled[i], color: _colors[i], size: 22),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    _labels[i],
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: _colors[i],
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Icon(
+                                _icons[i],
+                                color: theme.colorScheme.onSurfaceVariant,
+                                size: 22,
+                              ),
                       ),
                     ),
                   );
