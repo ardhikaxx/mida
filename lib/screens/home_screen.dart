@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/icd_service.dart';
 import 'about_screen.dart';
+import 'diagnosis_screen.dart';
 import 'generator_screen.dart';
 import 'icd_tree_screen.dart';
 import 'medical_dict_screen.dart';
@@ -124,6 +125,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   onSelected: (v) {
                     Widget screen;
                     switch (v) {
+                      case 'diagnosis':
+                        screen = const DiagnosisScreen();
+                        break;
                       case 'tree':
                         screen = const IcdTreeScreen();
                         break;
@@ -142,6 +146,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
                   },
                   itemBuilder: (_) => [
+                    const PopupMenuItem(
+                      value: 'diagnosis',
+                      height: 48,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 32, child: Icon(Icons.healing_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 12),
+                          Text('Diagnosis → ICD', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                    ),
                     const PopupMenuItem(
                       value: 'tree',
                       height: 48,
