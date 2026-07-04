@@ -12,6 +12,10 @@ enum IcdClassification {
   final String label;
   final String assetPath;
   const IcdClassification(this.label, this.assetPath);
+
+  static IcdClassification fromLabel(String label) {
+    return IcdClassification.values.firstWhere((e) => e.label == label);
+  }
 }
 
 class IcdService {
