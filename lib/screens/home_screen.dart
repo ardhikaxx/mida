@@ -95,15 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    color: isSelected
-                        ? _colors[i].withValues(alpha: 0.15)
-                        : Colors.transparent,
+                    color: isSelected ? _colors[i] : Colors.transparent,
                   ),
                   child: Center(
                     child: Icon(
                       isSelected ? _iconsFilled[i] : _icons[i],
                       color: isSelected
-                          ? _colors[i]
+                          ? Colors.white
                           : theme.colorScheme.onSurfaceVariant,
                       size: 22,
                     ),
