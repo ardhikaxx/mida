@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 64),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 70),
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
@@ -77,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text.rich(
                   TextSpan(
+                    style: theme.textTheme.labelSmall,
                     children: [
                       TextSpan(
                         text: 'MIDA\n',
@@ -84,14 +85,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: theme.colorScheme.primary,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1.5,
-                          fontSize: 14,
+                          fontSize: 16,
                         ),
                       ),
                       TextSpan(
                         text: 'mobile icd database application',
                         style: TextStyle(
                           color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                          fontSize: 12,
+                          fontSize: 13,
                         ),
                       ),
                     ],
