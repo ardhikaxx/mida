@@ -230,21 +230,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                       ),
                                     ),
                                     const SizedBox(height: 24),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                    Wrap(
+                                      spacing: 10,
+                                      runSpacing: 8,
+                                      alignment: WrapAlignment.center,
                                       children: [
                                         _FeatureBadge(
                                           icon: Icons.offline_bolt,
                                           label: 'Offline',
                                           theme: theme,
                                         ),
-                                        const SizedBox(width: 12),
                                         _FeatureBadge(
                                           icon: Icons.search,
                                           label: 'Cepat',
                                           theme: theme,
                                         ),
-                                        const SizedBox(width: 12),
                                         _FeatureBadge(
                                           icon: Icons.storage,
                                           label: '5 Klasifikasi',
