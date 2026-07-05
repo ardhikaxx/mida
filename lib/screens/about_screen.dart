@@ -58,9 +58,30 @@ class AboutScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 24),
       child: Column(
         children: [
-          SizedBox(
-            height: 72,
-            child: Image.asset('assets/images/logo-kemkes-new.png', fit: BoxFit.contain),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 48,
+                child: Image.asset('assets/images/logo-kemkes-new.png', fit: BoxFit.contain),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: SizedBox(
+                  height: 40,
+                  child: VerticalDivider(
+                    thickness: 1.5,
+                    color: Colors.grey.shade300,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 48,
+                width: 48,
+                child: Image.asset('assets/images/logo-app.png', fit: BoxFit.contain),
+              ),
+            ],
           ),
           const SizedBox(height: 12),
           Row(
