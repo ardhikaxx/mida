@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 PopupMenuButton<String>(
                   icon: Icon(Icons.more_vert, size: 20, color: theme.colorScheme.onSurfaceVariant),
-                  color: Colors.white,
+                  color: theme.colorScheme.surfaceContainer,
                   elevation: 8,
                   shadowColor: theme.shadowColor.withValues(alpha: 0.15),
                   shape: RoundedRectangleBorder(
@@ -168,80 +168,80 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
                   },
                   itemBuilder: (_) => [
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'diagnosis',
                       height: 48,
                       child: Row(
                         children: [
-                          SizedBox(width: 32, child: Icon(Icons.healing_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 32, child: Icon(Icons.healing_outlined, size: 20, color: theme.colorScheme.onSurfaceVariant)),
                           SizedBox(width: 12),
                           Text('Diagnosis → ICD', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                         ],
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'tree',
                       height: 48,
                       child: Row(
                         children: [
-                          SizedBox(width: 32, child: Icon(Icons.account_tree_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 32, child: Icon(Icons.account_tree_outlined, size: 20, color: theme.colorScheme.onSurfaceVariant)),
                           SizedBox(width: 12),
                           Text('Pohon ICD', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                         ],
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'dict',
                       height: 48,
                       child: Row(
                         children: [
-                          SizedBox(width: 32, child: Icon(Icons.menu_book_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 32, child: Icon(Icons.menu_book_outlined, size: 20, color: theme.colorScheme.onSurfaceVariant)),
                           SizedBox(width: 12),
                           Text('Glosarium Medis', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                         ],
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'generator',
                       height: 48,
                       child: Row(
                         children: [
-                          SizedBox(width: 32, child: Icon(Icons.auto_fix_high_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 32, child: Icon(Icons.auto_fix_high_outlined, size: 20, color: theme.colorScheme.onSurfaceVariant)),
                           SizedBox(width: 12),
                           Text('Cari Berdasarkan Gejala', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                         ],
                       ),
                     ),
                     PopupMenuDivider(height: 4),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'validator',
                       height: 48,
                       child: Row(
                         children: [
-                          SizedBox(width: 32, child: Icon(Icons.verified_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 32, child: Icon(Icons.verified_outlined, size: 20, color: theme.colorScheme.onSurfaceVariant)),
                           SizedBox(width: 12),
                           Text('Cek Validasi Kode', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                         ],
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'guidelines',
                       height: 48,
                       child: Row(
                         children: [
-                          SizedBox(width: 32, child: Icon(Icons.assignment_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 32, child: Icon(Icons.assignment_outlined, size: 20, color: theme.colorScheme.onSurfaceVariant)),
                           SizedBox(width: 12),
                           Text('Panduan Pengkodean', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                         ],
                       ),
                     ),
                     PopupMenuDivider(height: 4),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'settings',
                       height: 48,
                       child: Row(
                         children: [
-                          SizedBox(width: 32, child: Icon(Icons.settings_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 32, child: Icon(Icons.settings_outlined, size: 20, color: theme.colorScheme.onSurfaceVariant)),
                           SizedBox(width: 12),
                           Text('Pengaturan', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                         ],
@@ -252,9 +252,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 48,
                       child: Row(
                         children: [
-                          const SizedBox(width: 32, child: Icon(Icons.info_outline, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 32, child: Icon(Icons.info_outline, size: 20, color: theme.colorScheme.onSurfaceVariant)),
                           const SizedBox(width: 12),
-                          Text('Tentang MIDA', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                          const Text('Tentang MIDA', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                         ],
                       ),
                     ),
