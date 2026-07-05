@@ -197,9 +197,21 @@ class _DiagnosisScreenState extends State<DiagnosisScreen>
           icon: const Icon(Icons.chevron_left, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Diagnosis → ICD',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+        title: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Diagnosis',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+            ),
+            SizedBox(width: 6),
+            Icon(Icons.arrow_forward_rounded, color: Colors.white70, size: 16),
+            SizedBox(width: 6),
+            Text(
+              'ICD',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+            ),
+          ],
         ),
         centerTitle: true,
         actions: [
