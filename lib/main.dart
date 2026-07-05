@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/splash_screen.dart';
 
-void main() {
+final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final isDarkMode = prefs.getBool('darkMode') ?? false;
+  themeNotifier.value = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+  
   runApp(const MidaApp());
 }
 
@@ -10,18 +18,32 @@ class MidaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MIDA',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF00796B),
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-        appBarTheme: const AppBarTheme(centerTitle: true),
-      ),
-      home: const SplashScreen(),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (_, ThemeMode currentMode, child) {
+        return MaterialApp(
+          title: 'MIDA',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF00796B),
+              brightness: Brightness.light,
+            ),
+            useMaterial3: true,
+            appBarTheme: const AppBarTheme(centerTitle: true),
+          ),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF00796B),
+              brightness: Brightness.dark,
+            ),
+            useMaterial3: true,
+            appBarTheme: const AppBarTheme(centerTitle: true),
+          ),
+          themeMode: currentMode,
+          home: const SplashScreen(),
+        );
+      },
     );
   }
 }

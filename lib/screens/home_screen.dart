@@ -8,6 +8,7 @@ import 'generator_screen.dart';
 import 'icd_tree_screen.dart';
 import 'medical_dict_screen.dart';
 import 'search_screen.dart';
+import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -155,6 +156,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       case 'guidelines':
                         screen = const CodingGuidelinesScreen();
                         break;
+                      case 'settings':
+                        screen = const SettingsScreen();
+                        break;
                       case 'about':
                         screen = const AboutScreen();
                         break;
@@ -232,6 +236,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     PopupMenuDivider(height: 4),
+                    const PopupMenuItem(
+                      value: 'settings',
+                      height: 48,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 32, child: Icon(Icons.settings_outlined, size: 20, color: Color(0xFF5F6368))),
+                          SizedBox(width: 12),
+                          Text('Pengaturan', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                    ),
                     PopupMenuItem(
                       value: 'about',
                       height: 48,
@@ -239,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           const SizedBox(width: 32, child: Icon(Icons.info_outline, size: 20, color: Color(0xFF5F6368))),
                           const SizedBox(width: 12),
-                          Text('Tentang MIDA', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface)),
+                          Text('Tentang MIDA', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                         ],
                       ),
                     ),
