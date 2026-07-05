@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../main.dart';
 import '../services/icd_service.dart';
 import 'about_screen.dart';
 import 'code_validator_screen.dart';
@@ -289,7 +291,10 @@ class _HomeScreenState extends State<HomeScreen> {
             final isSelected = _selectedIndex == i;
             return Expanded(
               child: GestureDetector(
-                onTap: () => setState(() => _selectedIndex = i),
+                onTap: () {
+                  if (hapticNotifier.value) HapticFeedback.selectionClick();
+                  setState(() => _selectedIndex = i);
+                },
                 behavior: HitTestBehavior.opaque,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
