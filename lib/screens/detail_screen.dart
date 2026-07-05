@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import '../models/icd_code.dart';
 import '../services/icd_service.dart';
 import 'coding_guidelines_screen.dart';
+import '../main.dart';
 
 class DetailScreen extends StatefulWidget {
   final IcdCode code;
@@ -114,6 +115,9 @@ class _DetailScreenState extends State<DetailScreen> {
           const SizedBox(height: 12),
           GestureDetector(
             onTap: () {
+              if (hapticNotifier.value) {
+                HapticFeedback.lightImpact();
+              }
               Clipboard.setData(ClipboardData(text: widget.code.code));
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

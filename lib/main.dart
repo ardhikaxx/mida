@@ -3,12 +3,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/splash_screen.dart';
 
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
+final ValueNotifier<bool> hapticNotifier = ValueNotifier(true);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
+  
   final isDarkMode = prefs.getBool('darkMode') ?? false;
   themeNotifier.value = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+  
+  final isHapticOn = prefs.getBool('hapticFeedback') ?? true;
+  hapticNotifier.value = isHapticOn;
   
   runApp(const MidaApp());
 }

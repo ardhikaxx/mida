@@ -13,12 +13,20 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _isDarkMode = themeNotifier.value == ThemeMode.dark;
+  bool _isHapticOn = hapticNotifier.value;
 
   Future<void> _toggleTheme(bool value) async {
     setState(() => _isDarkMode = value);
     themeNotifier.value = value ? ThemeMode.dark : ThemeMode.light;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('darkMode', value);
+  }
+
+  Future<void> _toggleHaptic(bool value) async {
+    setState(() => _isHapticOn = value);
+    hapticNotifier.value = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hapticFeedback', value);
   }
 
   @override
@@ -79,6 +87,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 child: Icon(
                   _isDarkMode ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+                  color: color,
+                  size: 20,
+                ),
+              ),
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          Container(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: SwitchListTile(
+              value: _isHapticOn,
+              onChanged: _toggleHaptic,
+              activeTrackColor: color.withValues(alpha: 0.5),
+              activeThumbColor: color,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+              title: const Text('Getaran (Haptic)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+              subtitle: Text('Getaran saat menyalin kode atau interaksi', style: TextStyle(fontSize: 13, color: theme.colorScheme.onSurfaceVariant)),
+              secondary: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  _isHapticOn ? Icons.vibration_rounded : Icons.mobile_off_rounded,
                   color: color,
                   size: 20,
                 ),
