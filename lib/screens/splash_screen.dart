@@ -64,9 +64,36 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 80,
-              child: Image.asset('assets/images/logo-kemkes-new.png', fit: BoxFit.contain),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 72,
+                  child: Image.asset(
+                    'assets/images/logo-kemkes-new.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: SizedBox(
+                    height: 56,
+                    child: VerticalDivider(
+                      thickness: 1.5,
+                      color: Colors.grey.shade300,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 72,
+                  width: 72,
+                  child: Image.asset(
+                    'assets/images/logo-app.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             Row(
