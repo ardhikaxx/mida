@@ -69,16 +69,16 @@ class _SplashScreenState extends State<SplashScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 72,
+                  height: 48,
                   child: Image.asset(
                     'assets/images/logo-kemkes-new.png',
                     fit: BoxFit.contain,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: SizedBox(
-                    height: 56,
+                    height: 40,
                     child: VerticalDivider(
                       thickness: 1.5,
                       color: Colors.grey.shade300,
@@ -86,8 +86,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 72,
-                  width: 72,
+                  height: 48,
+                  width: 48,
                   child: Image.asset(
                     'assets/images/logo-app.png',
                     fit: BoxFit.contain,
