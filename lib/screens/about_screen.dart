@@ -76,10 +76,13 @@ class AboutScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 48,
-                width: 48,
-                child: Image.asset('assets/images/logo-app.png', fit: BoxFit.contain),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: SizedBox(
+                  height: 48,
+                  width: 48,
+                  child: Image.asset('assets/images/logo-app.png', fit: BoxFit.contain),
+                ),
               ),
             ],
           ),
