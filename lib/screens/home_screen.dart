@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 14, 20, 14),
+            padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 14, 4, 14),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -121,7 +121,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: _colors[_selectedIndex],
                   ),
                 ),
-                const SizedBox(width: 8),
                 PopupMenuButton<String>(
                   icon: Icon(Icons.more_vert, size: 20, color: theme.colorScheme.onSurfaceVariant),
                   color: Colors.white,
