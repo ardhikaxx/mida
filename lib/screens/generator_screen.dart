@@ -144,6 +144,17 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
         ),
         title: const Text('Cari Berdasarkan Gejala'),
         centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: Image.asset(
+              'assets/images/logo-app.png',
+              height: 28,
+              width: 28,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: [

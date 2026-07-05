@@ -82,6 +82,13 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Image.asset(
+                  'assets/images/logo-app.png',
+                  height: 36,
+                  width: 36,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(width: 12),
                 Text.rich(
                   TextSpan(
                     style: theme.textTheme.labelSmall,
