@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         text: 'mobile icd database application',
                         style: TextStyle(
                           color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                          fontSize: 11,
+                          fontSize: 10,
                         ),
                       ),
                     ],
