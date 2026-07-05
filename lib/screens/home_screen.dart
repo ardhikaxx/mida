@@ -100,13 +100,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1.5,
                           fontSize: 22,
+                          height: 1.0,
                         ),
                       ),
                       TextSpan(
                         text: 'mobile icd database application',
                         style: TextStyle(
                           color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                          fontSize: 10,
+                          fontSize: 11,
                         ),
                       ),
                     ],
