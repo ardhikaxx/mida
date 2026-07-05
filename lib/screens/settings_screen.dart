@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../main.dart';
 import 'about_screen.dart';
 
@@ -127,6 +128,79 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   trailing: Icon(Icons.chevron_right_rounded, color: theme.colorScheme.onSurfaceVariant),
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutScreen()));
+                  },
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Support Section
+          Text(
+            'BANTUAN & DUKUNGAN',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 1.5,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF25D366).withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.chat_rounded, color: Color(0xFF25D366), size: 20),
+                  ),
+                  title: const Text('Hubungi via WhatsApp', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                  subtitle: Text('085933648537', style: TextStyle(fontSize: 13, color: theme.colorScheme.onSurfaceVariant)),
+                  trailing: Icon(Icons.open_in_new_rounded, size: 16, color: theme.colorScheme.onSurfaceVariant),
+                  onTap: () async {
+                    final uri = Uri.parse('https://wa.me/6285933648537?text=Halo%20Admin%20MIDA,%20saya%20butuh%20bantuan');
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    }
+                  },
+                ),
+                Divider(height: 1, indent: 60, color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2)),
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEA4335).withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.email_rounded, color: Color(0xFFEA4335), size: 20),
+                  ),
+                  title: const Text('Lapor Bug / Email', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                  subtitle: Text('ardhikayanuar58@gmail.com', style: TextStyle(fontSize: 13, color: theme.colorScheme.onSurfaceVariant)),
+                  trailing: Icon(Icons.open_in_new_rounded, size: 16, color: theme.colorScheme.onSurfaceVariant),
+                  onTap: () async {
+                    final uri = Uri.parse('mailto:ardhikayanuar58@gmail.com?subject=Bantuan%20/ %20Lapor%20Bug%20Aplikasi%20MIDA');
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    }
                   },
                 ),
               ],
