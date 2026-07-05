@@ -9,19 +9,34 @@ class CodingGuidelinesScreen extends StatefulWidget {
   State<CodingGuidelinesScreen> createState() => _CodingGuidelinesScreenState();
 }
 
-class _CodingGuidelinesScreenState extends State<CodingGuidelinesScreen> {
+class _CodingGuidelinesScreenState extends State<CodingGuidelinesScreen>
+    with SingleTickerProviderStateMixin {
   late IcdClassification _selectedType;
+  late AnimationController _animController;
+  late Animation<double> _fadeAnim;
 
   @override
   void initState() {
     super.initState();
     _selectedType = widget.initialType ?? IcdClassification.icd10;
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
+    _animController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
   }
 
   static final Map<IcdClassification, _GuidelineData> _guidelines = {
     IcdClassification.icd10: _GuidelineData(
       label: 'ICD-10',
-      icon: Icons.medical_services_outlined,
+      icon: Icons.medical_services_rounded,
       description: 'International Statistical Classification of Diseases and Related Health Problems, 10th Revision. Standar internasional untuk klasifikasi diagnosis dan prosedur medis.',
       generalRules: [
         'Kode ICD-10 terdiri dari 1 huruf diikuti 2 digit (kategori), opsional desimal untuk subkategori',
@@ -68,7 +83,7 @@ class _CodingGuidelinesScreenState extends State<CodingGuidelinesScreen> {
     ),
     IcdClassification.icdMM: _GuidelineData(
       label: 'ICD-MM',
-      icon: Icons.pregnant_woman_outlined,
+      icon: Icons.pregnant_woman_rounded,
       description: 'ICD-Maternal Mortality. Klasifikasi khusus untuk kematian maternal terkait kehamilan, persalinan, dan nifas.',
       generalRules: [
         'ICD-MM adalah adaptasi dari ICD-10 Chapter O (O00–O99)',
@@ -103,7 +118,7 @@ class _CodingGuidelinesScreenState extends State<CodingGuidelinesScreen> {
     ),
     IcdClassification.icdPM: _GuidelineData(
       label: 'ICD-PM',
-      icon: Icons.monitor_heart_outlined,
+      icon: Icons.monitor_heart_rounded,
       description: 'ICD-Perinatal Mortality. Klasifikasi untuk kematian janin dan neonatal (periode perinatal).',
       generalRules: [
         'ICD-PM adalah adaptasi dari ICD-10 Chapter P (P00–P96)',
@@ -145,7 +160,7 @@ class _CodingGuidelinesScreenState extends State<CodingGuidelinesScreen> {
     ),
     IcdClassification.icdO: _GuidelineData(
       label: 'ICD-O',
-      icon: Icons.health_and_safety_outlined,
+      icon: Icons.biotech_rounded,
       description: 'International Classification of Diseases for Oncology. Klasifikasi khusus untuk tumor/neoplasma dengan kode topografi (anatomi) dan morfologi (histologi).',
       generalRules: [
         'ICD-O memiliki 2 sumbu: Topografi (C##.#) dan Morfologi (M####/#)',
@@ -198,7 +213,7 @@ class _CodingGuidelinesScreenState extends State<CodingGuidelinesScreen> {
     ),
     IcdClassification.icd9CM: _GuidelineData(
       label: 'ICD-9-CM',
-      icon: Icons.healing_outlined,
+      icon: Icons.healing_rounded,
       description: 'International Classification of Diseases, 9th Revision, Clinical Modification. Sistem klasifikasi diagnosis dan prosedur dengan digit tambahan untuk spesifikasi klinis.',
       generalRules: [
         'ICD-9-CM terdiri dari 3–5 digit numerik',
@@ -245,18 +260,42 @@ class _CodingGuidelinesScreenState extends State<CodingGuidelinesScreen> {
     ),
   };
 
+  _GuidelineData get _data => _guidelines[_selectedType]!;
+
+  void _onTypeChanged(IcdClassification? v) {
+    if (v != null && v != _selectedType) {
+      _animController.reset();
+      setState(() => _selectedType = v);
+      _animController.forward();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final color = theme.colorScheme.primary;
 
     return Scaffold(
+      backgroundColor: theme.colorScheme.surfaceContainerLowest,
       appBar: AppBar(
+        backgroundColor: color,
+        foregroundColor: Colors.white,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.chevron_left),
+          icon: const Icon(Icons.chevron_left, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Panduan Pengkodean'),
+        title: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.menu_book_rounded, color: Colors.white70, size: 20),
+            SizedBox(width: 8),
+            Text(
+              'Panduan Pengkodean',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),
+            ),
+          ],
+        ),
         centerTitle: true,
         actions: [
           Padding(
@@ -273,63 +312,152 @@ class _CodingGuidelinesScreenState extends State<CodingGuidelinesScreen> {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
-        children: [
-          _buildHeader(theme, color),
-          const SizedBox(height: 16),
-          _buildPicker(theme, color),
-          const SizedBox(height: 16),
-          _buildDescription(theme, color),
-          const SizedBox(height: 16),
-          _buildSection(theme, color, 'Aturan Umum', Icons.rule_outlined, _data.generalRules),
-          const SizedBox(height: 12),
-          if (_data.combinationRules.isNotEmpty)
-            _buildSection(theme, color, 'Kode Kombinasi', Icons.merge_type, _data.combinationRules),
-          if (_data.combinationRules.isNotEmpty) const SizedBox(height: 12),
-          _buildSection(theme, color, 'Catatan Penting', Icons.warning_amber_outlined, _data.notes),
-          const SizedBox(height: 12),
-          _buildChapterList(theme, color),
+      body: CustomScrollView(
+        slivers: [
+          // ── Hero Header ──────────────────────────────────────────────
+          SliverToBoxAdapter(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [color, color.withValues(alpha: 0.75)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Pilih sistem klasifikasi untuk melihat panduan pengkodean dan aturan dasar',
+                    style: TextStyle(color: Colors.white70, fontSize: 13, height: 1.4),
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // Classification Dropdown
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<IcdClassification>(
+                        value: _selectedType,
+                        isExpanded: true,
+                        icon: Icon(Icons.keyboard_arrow_down_rounded, color: color),
+                        style: TextStyle(color: color, fontWeight: FontWeight.w700, fontSize: 15),
+                        items: IcdClassification.values.map((t) {
+                          return DropdownMenuItem(
+                            value: t,
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: color.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Icon(_guidelines[t]!.icon, color: color, size: 16),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(t.label),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: _onTypeChanged,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // ── Content Area ───────────────────────────────────────────
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
+            sliver: SliverToBoxAdapter(
+              child: FadeTransition(
+                opacity: _fadeAnim,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDescriptionCard(theme, color),
+                    const SizedBox(height: 16),
+                    _buildRuleSection(theme, color, 'Aturan Umum', Icons.rule_rounded, _data.generalRules),
+                    if (_data.combinationRules.isNotEmpty) ...[
+                      const SizedBox(height: 16),
+                      _buildRuleSection(theme, color, 'Kode Kombinasi', Icons.merge_type_rounded, _data.combinationRules),
+                    ],
+                    const SizedBox(height: 16),
+                    _buildRuleSection(theme, color, 'Catatan Penting', Icons.warning_amber_rounded, _data.notes, isWarning: true),
+                    const SizedBox(height: 16),
+                    _buildChapterList(theme, color),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  _GuidelineData get _data => _guidelines[_selectedType]!;
-
-  Widget _buildHeader(ThemeData theme, Color color) {
+  Widget _buildDescriptionCard(ThemeData theme, Color color) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [color, color.withValues(alpha: 0.7)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3)),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(_data.icon, color: Colors.white, size: 32),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.info_outline_rounded, color: color, size: 20),
+          ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'PANDUAN PENGKODEAN',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.7),
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 2,
+                  'Tentang ${_data.label}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 14,
+                    color: color,
                   ),
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  _data.label,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
+                  _data.description,
+                  style: TextStyle(
+                    fontSize: 13,
+                    height: 1.5,
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
@@ -340,69 +468,16 @@ class _CodingGuidelinesScreenState extends State<CodingGuidelinesScreen> {
     );
   }
 
-  Widget _buildPicker(ThemeData theme, Color color) {
+  Widget _buildRuleSection(
+      ThemeData theme, Color color, String title, IconData icon, List<String> items,
+      {bool isWarning = false}) {
+    final baseColor = isWarning ? const Color(0xFFE53935) : color;
+    
     return Container(
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4)),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<IcdClassification>(
-          value: _selectedType,
-          isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down),
-          items: IcdClassification.values.map((t) {
-            return DropdownMenuItem(
-              value: t,
-              child: Row(
-                children: [
-                  Icon(_guidelines[t]!.icon, size: 20, color: color),
-                  const SizedBox(width: 10),
-                  Text(t.label, style: const TextStyle(fontWeight: FontWeight.w600)),
-                ],
-              ),
-            );
-          }).toList(),
-          onChanged: (v) {
-            if (v != null) setState(() => _selectedType = v);
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDescription(ThemeData theme, Color color) {
-    return Container(
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.04),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withValues(alpha: 0.15)),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.info_outline, color: color, size: 20),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              _data.description,
-              style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSection(ThemeData theme, Color color, String title, IconData icon, List<String> items) {
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4)),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3)),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -410,25 +485,51 @@ class _CodingGuidelinesScreenState extends State<CodingGuidelinesScreen> {
         children: [
           Row(
             children: [
-              Icon(icon, size: 18, color: color),
-              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: baseColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, size: 16, color: baseColor),
+              ),
+              const SizedBox(width: 10),
               Text(
                 title,
-                style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                  color: baseColor,
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           ...items.map((item) => Padding(
-            padding: const EdgeInsets.only(bottom: 6),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('• ', style: TextStyle(color: color, fontWeight: FontWeight.bold)),
-                Expanded(child: Text(item, style: theme.textTheme.bodySmall?.copyWith(height: 1.5))),
-              ],
-            ),
-          )),
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6, right: 10, left: 2),
+                      child: CircleAvatar(
+                        radius: 3,
+                        backgroundColor: baseColor.withValues(alpha: 0.5),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        item,
+                        style: TextStyle(
+                          fontSize: 13,
+                          height: 1.5,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.9),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
         ],
       ),
     );
@@ -437,9 +538,9 @@ class _CodingGuidelinesScreenState extends State<CodingGuidelinesScreen> {
   Widget _buildChapterList(ThemeData theme, Color color) {
     return Container(
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4)),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3)),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -447,46 +548,80 @@ class _CodingGuidelinesScreenState extends State<CodingGuidelinesScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.list_alt_outlined, size: 18, color: color),
-              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(Icons.format_list_bulleted_rounded, size: 16, color: color),
+              ),
+              const SizedBox(width: 10),
               Text(
-                'Daftar Chapter',
-                style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                'Daftar Chapter (Bab)',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                  color: color,
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          ..._data.chapters.map((ch) => Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          const SizedBox(height: 16),
+          ..._data.chapters.asMap().entries.map((entry) {
+            final idx = entry.key;
+            final ch = entry.value;
+            final isLast = idx == _data.chapters.length - 1;
+            
+            return Column(
               children: [
-                Container(
-                  width: 72,
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    ch.range,
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: color,
-                    ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 76,
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: color.withValues(alpha: 0.15)),
+                        ),
+                        child: Text(
+                          ch.range,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w800,
+                            color: color,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          ch.title,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.onSurfaceVariant,
+                            height: 1.3,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    ch.title,
-                    style: theme.textTheme.bodySmall?.copyWith(height: 1.3),
+                if (!isLast)
+                  Divider(
+                    height: 12,
+                    color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
                   ),
-                ),
               ],
-            ),
-          )),
+            );
+          }),
         ],
       ),
     );
