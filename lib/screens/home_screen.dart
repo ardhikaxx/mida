@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: theme.colorScheme.primary,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1.5,
-                          fontSize: 16,
+                          fontSize: 22,
                         ),
                       ),
                       TextSpan(
